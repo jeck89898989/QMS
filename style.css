@@ -1,0 +1,5 @@
+/* Main stylesheet - imports modular CSS files */
+@import url('./styles/globals.css');
+@import url('./styles/layout.css');
+@import url('./styles/components.css');
+@import url('./styles/responsive.css');
