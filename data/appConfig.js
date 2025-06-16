@@ -277,7 +277,7 @@ const QC_MODULES = {
         category: "qc",
         description: "Advanced inspection report builder for Test A procedures and documentation. Features include automated report generation, customizable templates, and compliance verification. Purpose: Generate comprehensive inspection reports for Test A procedures. Scope: Specialized testing procedures, regulatory compliance reporting, and detailed inspection documentation.",
         initialData: {
-            url: 'https://example.com/inspection-report-builder-test-a',
+            url: 'https://github.com/jeck89898989/QMS/blob/main/Inspection%20Report%20Builder%201%20(Test%20A)/index.html',
             description: 'Advanced inspection report builder for Test A procedures and documentation'
         }
     },
@@ -288,7 +288,7 @@ const QC_MODULES = {
         category: "qc",
         description: "Advanced inspection report builder for Test B procedures and documentation. Features include automated report generation, customizable templates, and compliance verification. Purpose: Generate comprehensive inspection reports for Test B procedures. Scope: Specialized testing procedures, regulatory compliance reporting, and detailed inspection documentation.",
         initialData: {
-            url: 'https://example.com/inspection-report-builder-test-b',
+            url: 'https://github.com/jeck89898989/QMS/blob/main/Inspection%20Report%20Builder%202%20(Test%20B)/index.html',
             description: 'Advanced inspection report builder for Test B procedures and documentation'
         }
     }
