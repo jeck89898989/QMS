@@ -1,0 +1,693 @@
+/* Professional table styling */
+.time-breakdown-table,
+.contact-table,
+.inspection-results-table,
+.item-details-table,
+.inspection-table,
+.document-table,
+.additional-docs-table,
+.calibration-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 3px 0;
+    font-size: 0.8em;
+    background: white;
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Table headers with enhanced styling */
+table th {
+    background: #f8f9fa;
+    color: var(--text-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 1px;
+    border: 1px solid var(--border-color);
+    font-size: 0.7em;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+
+table th::after {
+    display: none;
+}
+
+/* Table cells with enhanced spacing */
+table td {
+    padding: 1px;
+    vertical-align: middle;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    transition: none;
+}
+
+/* Enhanced table row styling */
+tr:nth-child(even) td {
+    background-color: var(--table-even-row);
+}
+
+tr:hover td {
+    background-color: var(--table-hover);
+    transform: none;
+    box-shadow: none;
+}
+
+/* Section headers in tables */
+.section-header td {
+    background: #f1f5f9 !important;
+    color: var(--text-color) !important;
+    font-weight: 600;
+    padding: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--input-border) !important;
+    position: relative;
+}
+
+.section-header td::after {
+    display: none;
+}
+
+/* Table input styling */
+table input[type="text"],
+table input[type="number"] {
+    border: 1px solid var(--input-border);
+    padding: 2px 4px;
+    background-color: transparent;
+    border-radius: 2px;
+    transition: none;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+table input[type="text"]:focus,
+table input[type="number"]:focus {
+    border-color: var(--input-focus);
+    background-color: white;
+    box-shadow: 0 0 0 1px rgba(49, 130, 206, 0.1);
+}
+
+/* Enhanced partial totals styling */
+.partial-total,
+#weekly-total-time,
+#weekly-total-km {
+    font-weight: 600;
+    color: var(--text-color);
+    background: #f8f9fa;
+    padding: 1px 2px;
+    border: 1px solid var(--input-border);
+    border-radius: 2px;
+    box-shadow: none;
+}
+
+/* Enhanced footer styling for tables */
+tfoot td {
+    background: #f8f9fa !important;
+    font-weight: 600;
+    color: var(--text-color);
+    border-top: 2px solid var(--input-focus);
+    padding: 2px 1px;
+}
+
+/* Styling for the Time Breakdown table */
+.time-breakdown-table {
+    margin-top: 10px;
+}
+.time-breakdown-table th,
+.time-breakdown-table td {
+    border: 1px solid #eee;
+    padding: 8px 5px;
+    text-align: center;
+}
+.time-breakdown-table td:first-child {
+    text-align: left;
+    font-weight: bold;
+    width: 150px;
+}
+.time-breakdown-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.time-breakdown-table input[type="number"] {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.time-breakdown-table tfoot td {
+    background-color: #f9f9f9;
+    text-align: right;
+    font-weight: bold;
+}
+.time-breakdown-table tfoot td:first-child {
+    text-align: left;
+}
+
+/* Styling for the Contact Information table */
+.contact-table {
+    margin-top: 10px;
+}
+.contact-table th,
+.contact-table td {
+    border: 1px solid #eee;
+    padding: 5px;
+}
+.contact-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+.contact-table td input[type="text"] {
+    width: 100%;
+    padding: 4px;
+    border: none;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.contact-table td {
+    padding: 0;
+}
+
+/* Styling for the Inspection Results table */
+.inspection-results-table {
+    margin-top: 15px;
+}
+.inspection-results-table th,
+.inspection-results-table td {
+    border: 1px solid #eee;
+    padding: 8px 5px;
+    text-align: left;
+    vertical-align: top;
+}
+.inspection-results-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.inspection-results-table td:first-child {
+    width: 30px;
+    text-align: center;
+    padding-top: 12px;
+}
+.inspection-results-table td:last-child {
+    width: 35%;
+    padding: 0;
+}
+.inspection-results-table td:last-child input[type="text"] {
+    width: 100%;
+    height: 100%;
+    padding: 8px 5px;
+    border: none;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+/* Inspection results tables side by side layout */
+.inspection-results-tables-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.inspection-results-table-left,
+.inspection-results-table-right {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: white;
+    overflow: hidden;
+}
+
+.inspection-results-table-left .inspection-results-table,
+.inspection-results-table-right .inspection-results-table {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+/* Styling for the Item Details table */
+.item-details-table {
+    margin-top: 15px;
+}
+.item-details-table th,
+.item-details-table td {
+    border: 1px solid #eee;
+    padding: 8px 5px;
+    text-align: left;
+    vertical-align: top;
+}
+.item-details-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.item-details-table td:first-child {
+    font-weight: bold;
+    text-align: center;
+    width: 60px;
+    padding: 8px 5px;
+}
+.item-details-table td input[type="text"],
+.item-details-table td input[type="number"] {
+    width: 100%;
+    padding: 4px;
+    border: none;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.item-details-table td {
+    padding: 0;
+}
+.item-details-table th:nth-child(6) {
+    width: 25%;
+}
+.item-details-table th:nth-child(9),
+.item-details-table th:nth-child(10) {
+    width: 15%;
+}
+
+/* Styling for generic inspection tables */
+.inspection-table {
+    margin-top: 15px;
+}
+.inspection-table th,
+.inspection-table td {
+    border: 1px solid #eee;
+    padding: 8px 5px;
+    text-align: left;
+    vertical-align: top;
+}
+.inspection-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.inspection-table tbody tr.section-header td {
+    background-color: #edf2f7;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 10px;
+}
+
+/* For 5-column tables (e.g., Valves): Description | P | F | NA | Guidance */
+.inspection-table.five-col td:nth-child(1) { width: 30%; }
+.inspection-table.five-col td:nth-child(5) { width: auto; } /* Guidance/Notes takes remaining space */
+
+.inspection-table.five-col td:nth-child(2),
+.inspection-table.five-col td:nth-child(3),
+.inspection-table.five-col td:nth-child(4) { /* P/F/NA Checkbox columns */
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* For 6-column tables (e.g., ISO Audit): Clause | Question | P | F | NA | Notes */
+.inspection-table.six-col td:nth-child(1) { width: 100px; } /* Clause */
+.inspection-table.six-col td:nth-child(2) { width: 40%; }  /* Question */
+.inspection-table.six-col td:nth-child(6) { width: auto; }  /* Notes */
+
+.inspection-table.six-col td:nth-child(3),
+.inspection-table.six-col td:nth-child(4),
+.inspection-table.six-col td:nth-child(5) { /* P/F/NA Checkbox columns */
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Document table styling */
+.document-table,
+.additional-docs-table,
+.calibration-table {
+    margin-top: 15px;
+}
+.document-table th,
+.document-table td,
+.additional-docs-table th,
+.additional-docs-table td,
+.calibration-table th,
+.calibration-table td {
+    border: 1px solid #eee;
+    padding: 8px 5px;
+    text-align: left;
+    vertical-align: top;
+}
+.document-table th,
+.additional-docs-table th,
+.calibration-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.document-table td:first-child,
+.additional-docs-table td:first-child {
+    width: 50px;
+    text-align: center;
+    padding-top: 12px;
+}
+.document-table td input[type="text"],
+.additional-docs-table td input[type="text"],
+.calibration-table td input[type="text"] {
+    width: 100%;
+    padding: 4px;
+    border: none;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.document-table td,
+.additional-docs-table td,
+.calibration-table td {
+    padding: 0;
+}
+.additional-docs-table td:first-child,
+.additional-docs-table td:nth-child(2) {
+    padding: 8px 5px;
+}
+.additional-docs-table td:nth-child(2) {
+    font-weight: bold;
+    width: 30%;
+}
+.additional-docs-table td:nth-child(3),
+.additional-docs-table td:last-child {
+    width: 30%;
+}
+
+/* Document tables side by side layout */
+.document-tables-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.standard-documents-table,
+.custom-documents-table {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: white;
+    overflow: hidden;
+}
+
+.standard-documents-table h4,
+.custom-documents-table h4 {
+    margin: 0;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    color: var(--text-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.standard-documents-table .document-table,
+.custom-documents-table .document-table {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .document-tables-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+/* Inspection results tables side by side layout */
+@media (max-width: 768px) {
+    .inspection-results-tables-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+/* Extended Audit Table Styling */
+.extended-audit-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: white;
+    box-shadow: none;
+    max-width: 100%;
+    position: relative;
+    margin-left: 0;
+    text-align: left;
+}
+
+.extended-audit-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 0.75em;
+    background: white;
+    border: none;
+}
+
+.extended-audit-table th {
+    background: #f8f9fa;
+    color: var(--text-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 3px;
+    border: 1px solid var(--border-color);
+    font-size: 0.7em;
+    letter-spacing: 0.3px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.extended-audit-table td {
+    padding: 2px;
+    vertical-align: top;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    transition: none;
+}
+
+.extended-audit-table tr:nth-child(even) td {
+    background-color: var(--table-even-row);
+}
+
+.extended-audit-table tr:hover td {
+    background-color: var(--table-hover);
+}
+
+/* For transposed table, first column styled like headers */
+.extended-audit-table td:first-child {
+    background: #f8f9fa !important;
+    color: var(--text-color) !important;
+    font-weight: 600;
+    text-align: left;
+    width: 200px;
+    min-width: 200px;
+    white-space: nowrap;
+    padding: 4px 6px;
+}
+
+/* For transposed table, adjust column widths */
+.extended-audit-table th:first-child {
+    width: 200px;
+    min-width: 200px;
+}
+
+.extended-audit-table th:not(:first-child),
+.extended-audit-table td:not(:first-child) {
+    width: 400px;
+    min-width: 400px;
+}
+
+/* Extended audit table input styling */
+.extended-audit-table input[type="text"],
+.extended-audit-table input[type="number"],
+.extended-audit-table input[type="date"],
+.extended-audit-table textarea,
+.extended-audit-table select {
+    width: 100%;
+    border: 1px solid var(--input-border);
+    padding: 3px;
+    font-size: 11px;
+    background-color: transparent;
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.extended-audit-table textarea {
+    min-height: 35px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.2;
+}
+
+.extended-audit-table input[type="text"]:focus,
+.extended-audit-table input[type="number"]:focus,
+.extended-audit-table input[type="date"]:focus,
+.extended-audit-table textarea:focus,
+.extended-audit-table select:focus {
+    border-color: var(--input-focus);
+    background-color: white;
+    outline: none;
+}
+
+.extended-audit-table select {
+    cursor: pointer;
+    padding: 2px;
+    font-size: 10px;
+}
+
+/* Extended audit description styling */
+.extended-audit-description {
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-shadow: none;
+}
+
+.extended-audit-description p {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* Full-width extended audit section */
+fieldset[data-section-id="extended-audit"],
+fieldset[data-section-id="extended-audit-table"] {
+    width: auto;
+    margin-left: 0;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: var(--layout-fieldset-padding);
+    padding-right: var(--layout-fieldset-padding);
+    max-width: 100%;
+}
+
+/* Ensure the extended audit container takes full width */
+#extended-audit-container,
+#extended-audit-table-container {
+    width: 100%;
+    overflow: visible;
+    max-width: 100%;
+}
+
+/* Reset the extended audit table positioning */
+.extended-audit-table {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    min-width: 600px;
+    position: relative;
+    left: 0;
+    text-align: left;
+}
+
+/* Extended Audit Table Controls */
+.extended-audit-controls {
+    position: relative;
+    text-align: right;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+.add-audit-table-btn,
+.remove-audit-table-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50%;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.add-audit-table-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.remove-audit-table-btn {
+    border-color: #e53e3e;
+    color: #e53e3e;
+}
+
+.remove-audit-table-btn:hover {
+    background: #e53e3e;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.extended-audit-table-container {
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 8px;
+    box-shadow: none;
+}
+
+.extended-audit-table-container:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Hide additional items by default */
+.additional-item.hidden {
+    display: none;
+}
+
+/* Table controls styling */
+.table-controls {
+    margin-top: 8px;
+    text-align: right;
+}
+
+.table-control-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.table-control-btn:hover {
+    background: var(--secondary-color);
+}
+
+@media print {
+    /* Show all items when printing */
+    .additional-item.hidden {
+        display: table-row;
+    }
+    
+    /* Hide controls when printing */
+    .table-controls {
+        display: none;
+    }
+}

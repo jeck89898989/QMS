@@ -1,0 +1,241 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspection Report Form</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/form-elements.css">
+    <link rel="stylesheet" href="styles/tables.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <button id="hamburger-menu" class="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+        </div>
+        <div class="sidebar-content">
+            <button id="refresh-form-btn" class="sidebar-btn">Refresh Form</button>
+            <button id="export-json-btn" class="sidebar-btn">Export to JSON</button>
+            <button id="import-json-btn" class="sidebar-btn">Import from JSON</button>
+            <button id="export-settings-btn" class="sidebar-btn">Export Settings</button>
+            <button id="import-settings-btn" class="sidebar-btn">Import Settings</button>
+            <button id="print-options-btn" class="sidebar-btn">Print Options</button>
+            <button id="export-docx-btn" class="sidebar-btn">Export to DOCX</button>
+            <button id="export-xlsx-btn" class="sidebar-btn">Export to XLSX</button>
+            <button id="export-pdf-btn" class="sidebar-btn">Export to PDF</button>
+            <div class="sidebar-form-style">
+                <label for="form-style-select" class="sidebar-label">Form Style:</label>
+                <select id="form-style-select" class="sidebar-select">
+                    <option value="default">Default Professional</option>
+                    <option value="corporate-blue">Corporate Blue</option>
+                    <option value="forest-green">Forest Green</option>
+                    <option value="burgundy-wine">Burgundy Wine</option>
+                    <option value="slate-gray">Slate Gray</option>
+                    <option value="navy-gold">Navy & Gold</option>
+                    <option value="charcoal-orange">Charcoal Orange</option>
+                    <option value="teal-silver">Teal Silver</option>
+                    <option value="purple-cream">Purple Cream</option>
+                    <option value="brown-tan">Brown Tan</option>
+                    <option value="midnight-blue">Midnight Blue</option>
+                    <option value="olive-beige">Olive Beige</option>
+                    <option value="crimson-gray">Crimson Gray</option>
+                    <option value="emerald-ivory">Emerald Ivory</option>
+                    <option value="steel-blue">Steel Blue</option>
+                    <option value="copper-cream">Copper Cream</option>
+                    <option value="black-white">Black & White</option>
+                    <option value="no-color">No Color</option>
+                </select>
+            </div>
+            <div class="sidebar-form-layout">
+                <label for="form-layout-select" class="sidebar-label">Form Layout:</label>
+                <select id="form-layout-select" class="sidebar-select">
+                    <option value="default">Default Layout</option>
+                    <option value="compact">Compact Layout</option>
+                    <option value="wide-screen">Wide Screen Layout</option>
+                    <option value="narrow">Narrow Layout</option>
+                    <option value="minimal">Minimal Layout</option>
+                    <option value="tabular">Tabular Layout (Print Optimized)</option>
+                </select>
+            </div>
+            <div class="sidebar-section-toggle">
+                <label for="section-toggle-select" class="sidebar-label">Show/Hide Sections:</label>
+                <select id="section-toggle-select" class="sidebar-select">
+                    <option value="">Select Action...</option>
+                    <option value="show-all">Show All Sections</option>
+                    <option value="hide-all">Hide All Sections</option>
+                    <option value="custom">Custom Selection...</option>
+                </select>
+            </div>
+            <div class="sidebar-template-selector">
+                <label for="template-select" class="sidebar-label">Template:</label>
+                <select id="template-select" class="sidebar-select">
+                    <option value="master-view">Master View</option>
+                    <option value="create-custom-inspection">Create Custom Inspection</option>
+                    <option value="image-attachments">Image Attachments</option>
+                    <option value="iso-checklist">ISO Checklist</option>
+                    <option value="aml">AML</option>
+                    <option value="international-audit">International Audit Form</option>
+                    <option value="create-new-template">Create New Template...</option>
+                </select>
+                <button id="edit-template-btn" class="sidebar-btn" style="margin-top: 8px; font-size: 0.7em;">Edit Templates</button>
+            </div>
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+    
+    <div class="title-block">
+        <h1>Inspection Report Form</h1>
+        <div class="title-info">
+            <p>Professional inspection documentation system for comprehensive quality assurance and compliance reporting.</p>
+        </div>
+    </div>
+    
+    <form action="#" id="inspection-form">
+        <!-- Form sections will be dynamically generated -->
+    </form>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "jszip": "https://esm.sh/jszip@3.10.1",
+        "docx": "https://esm.sh/docx@8.5.0",
+        "xlsx": "https://esm.sh/xlsx@0.18.5"
+      }
+    }
+    </script>
+    <script type="module" src="script.js"></script>
+    <!-- removed all the large form structures - moved to formSections.js -->
+
+    <!-- Print Options Modal -->
+    <div id="print-options-modal" class="modal no-print no-edit">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Print Options</h2>
+                <button id="close-print-modal" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Sections to Print</h4>
+                <div id="print-section-checklist">
+                    <!-- Checkboxes for sections will be dynamically inserted here -->
+                </div>
+                <hr>
+                <h4>Other Options</h4>
+                <div class="print-option-item">
+                    <label>
+                        <input type="checkbox" id="print-opt-images" checked>
+                        Include Images
+                    </label>
+                </div>
+                 <div class="print-option-item">
+                    <label>
+                        <input type="checkbox" id="print-opt-empty-fields">
+                        Hide Empty Rows/Fields
+                    </label>
+                </div>
+                <div class="print-option-item">
+                    <label>
+                        <input type="checkbox" id="print-opt-show-hidden-rows">
+                        Show Hidden Table Rows
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="print-form-btn" class="sidebar-btn">Print</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Theme Creator Modal -->
+    <div id="custom-theme-modal" class="custom-theme-modal no-print no-edit">
+        <div class="custom-theme-content">
+            <div class="modal-header">
+                <h2>Create Custom Theme</h2>
+                <button id="close-custom-theme-modal" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="custom-theme-name" class="custom-theme-name-input" placeholder="Enter theme name...">
+                
+                <div class="theme-colors-grid" id="theme-colors-grid">
+                    <!-- Color pickers will be generated here -->
+                </div>
+                
+                <div class="theme-preview-section">
+                    <h4>Preview</h4>
+                    <div style="padding: 10px; background: var(--fieldset-bg); border: 2px solid var(--border-color);">
+                        <div style="background: var(--legend-bg); color: var(--legend-text); padding: 8px 16px; margin-bottom: 10px;">Sample Legend</div>
+                        <div style="background: var(--input-bg); border: 1px solid var(--input-border); padding: 8px; margin-bottom: 10px;">Sample Input Field</div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="background: var(--table-header-bg);">
+                                <th style="border: 1px solid var(--border-color); padding: 5px;">Header</th>
+                                <th style="border: 1px solid var(--border-color); padding: 5px;">Header</th>
+                            </tr>
+                            <tr style="background: var(--table-even-row);">
+                                <td style="border: 1px solid var(--border-color); padding: 5px;">Data</td>
+                                <td style="border: 1px solid var(--border-color); padding: 5px;">Data</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="theme-actions">
+                <button id="save-custom-theme" class="theme-btn theme-btn-primary">Save Theme</button>
+                <button id="cancel-custom-theme" class="theme-btn theme-btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Creator Modal -->
+    <div id="template-creator-modal" class="modal no-print no-edit">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Template Creator</h2>
+                <button id="close-template-creator" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="template-name-input">Template Name:</label>
+                    <input type="text" id="template-name-input" class="template-input" placeholder="Enter template name..." maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="template-description-input">Description (optional):</label>
+                    <textarea id="template-description-input" class="template-input" rows="2" placeholder="Enter template description..." maxlength="200"></textarea>
+                </div>
+                <h4>Select Sections to Include:</h4>
+                <div id="template-section-checklist" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; max-height: 40vh; overflow-y: auto; background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 4px;">
+                    <!-- Section checkboxes will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-template-btn" class="sidebar-btn">Save Template</button>
+                <button id="cancel-template-btn" class="sidebar-btn" style="background: #6c757d;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Manager Modal -->
+    <div id="template-manager-modal" class="modal no-print no-edit">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Templates</h2>
+                <button id="close-template-manager" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Custom Templates</h4>
+                <div id="custom-templates-list" style="max-height: 50vh; overflow-y: auto;">
+                    <!-- Custom templates will be listed here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close-template-manager-btn" class="sidebar-btn">Close</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

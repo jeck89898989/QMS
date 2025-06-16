@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global Product Nonconformance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f7fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #003366;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .home-link, .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .home-link i, .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .home-link:hover, .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .csv-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-container input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #003366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background-color: #004c99;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable th, 
+    table.dataTable td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+    }
+
+    table.dataTable thead th {
+      background-color: #f2f2f2;
+      border-bottom: 2px solid #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dataTables_wrapper .dataTables_length, 
+    .dataTables_wrapper .dataTables_filter, 
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_paginate {
+      margin-bottom: 10px;
+    }
+
+    .status-open {
+      background-color: #ffeeba;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    .status-in-progress {
+      background-color: #b8daff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #004085;
+    }
+
+    .status-resolved {
+      background-color: #c3e6cb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .severity-high {
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .severity-medium {
+      color: #856404;
+    }
+
+    .severity-low {
+      color: #155724;
+    }
+
+    .export-options {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sample-data {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .sample-data h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .sample-data pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    .help-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Google Translate */
+    #google_translate_element {
+      margin-left: 15px;
+    }
+    
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    
+    body {
+        top: 0px !important; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="mrc_logo.png" alt="MRC Global Logo" class="logo">
+      <div class="header-text">
+        <h1>Product Nonconformance</h1>
+        <p class="subtitle">Management and Tracking System</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="home-link"><i class="fas fa-home"></i> Home</a>
+        <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> Help</a>
+        <div id="google_translate_element"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <h2>Product Nonconformance Records</h2>
+      <p>Upload, manage, and analyze product nonconformance data. The system allows tracking issues from identification through resolution.</p>
+      
+      <div id="alertBox" class="alert" style="display: none;"></div>
+      
+      <div class="csv-controls">
+        <div class="control-group">
+          <label for="csvFile">Import Product Nonconformance Data (CSV)</label>
+          <div class="file-input-container">
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="importBtn" class="btn btn-primary"><i class="fas fa-file-import"></i> Import Data</button>
+            <button id="clearBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Data</button>
+          </div>
+          <p class="help-text">Select a CSV file containing nonconformance records to import</p>
+        </div>
+        
+        <button id="addNewBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Record</button>
+      </div>
+      
+      <div class="sample-data">
+        <h3>Sample CSV Format</h3>
+        <p>Your CSV file should follow this structure (header row required):</p>
+        <pre>id,date_reported,product_id,product_name,issue_description,severity,status,reported_by,assigned_to,corrective_action,completion_date
+1,2023-11-01,PR-1234,Ball Valve 2",Damaged external coating,Medium,Resolved,John Smith,Maria Garcia,Recoated using spec XYZ-123,2023-11-10
+2,2023-11-12,PR-5678,Check Valve 3",Missing certification documents,High,In Progress,Anna Johnson,Eric Chen,"Requested documentation from supplier, following up weekly",
+3,2023-11-15,PR-9012,Gate Valve 4",Surface scratches beyond spec limits,Low,Open,Chris Taylor,Pending assignment,,</pre>
+      </div>
+      
+      <div class="table-container">
+        <table id="nonconformanceTable" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date Reported</th>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Issue Description</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Reported By</th>
+              <th>Assigned To</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="export-options">
+        <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export to CSV</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      </div>
+    </div>
+    
+    <!-- Modal for viewing/editing record details -->
+    <div id="recordModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Product Nonconformance Record</h2>
+        <form id="recordForm">
+          <input type="hidden" id="recordId">
+          
+          <div class="form-group">
+            <label for="dateReported">Date Reported</label>
+            <input type="date" id="dateReported" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="productId">Product ID</label>
+            <input type="text" id="productId" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="issueDescription">Issue Description</label>
+            <textarea id="issueDescription" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="severity">Severity</label>
+            <select id="severity" required>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="reportedBy">Reported By</label>
+            <input type="text" id="reportedBy" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignedTo">Assigned To</label>
+            <input type="text" id="assignedTo">
+          </div>
+          
+          <div class="form-group">
+            <label for="correctiveAction">Corrective Action</label>
+            <textarea id="correctiveAction" rows="3"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="completionDate">Completion Date</label>
+            <input type="date" id="completionDate">
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> MRC Global. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      let table = $('#nonconformanceTable').DataTable({
+        columns: [
+          { data: 'id' },
+          { data: 'date_reported' },
+          { data: 'product_id' },
+          { data: 'product_name' },
+          { data: 'issue_description' },
+          { 
+            data: 'severity',
+            render: function(data) {
+              let className = '';
+              if (data === 'High') className = 'severity-high';
+              else if (data === 'Medium') className = 'severity-medium';
+              else if (data === 'Low') className = 'severity-low';
+              return `<span class="${className}">${data}</span>`;
+            }
+          },
+          { 
+            data: 'status',
+            render: function(data) {
+              return `<span class="status-${data.toLowerCase().replace(' ', '-')}">${data}</span>`;
+            }
+          },
+          { data: 'reported_by' },
+          { data: 'assigned_to' },
+          { 
+            data: null,
+            defaultContent: '<button class="btn-view"><i class="fas fa-eye"></i></button> <button class="btn-edit"><i class="fas fa-edit"></i></button> <button class="btn-delete"><i class="fas fa-trash"></i></button>',
+            orderable: false 
+          }
+        ]
+      });
+      
+      // Check for local storage data on load
+      loadFromLocalStorage();
+      
+      // Import CSV button click handler
+      $('#importBtn').click(function() {
+        const fileInput = $('#csvFile')[0];
+        if (fileInput.files.length === 0) {
+          showAlert('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const csv = e.target.result;
+          processCSV(csv);
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process CSV data
+      function processCSV(csv) {
+        const lines = csv.split('\n');
+        if (lines.length < 2) {
+          showAlert('The CSV file appears to be empty or invalid.', 'danger');
+          return;
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const expectedHeaders = ['id', 'date_reported', 'product_id', 'product_name', 'issue_description', 'severity', 'status', 'reported_by', 'assigned_to', 'corrective_action', 'completion_date'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          showAlert(`CSV is missing required columns: ${missingHeaders.join(', ')}`, 'danger');
+          return;
+        }
+        
+        // Clear existing data
+        table.clear();
+        
+        // Process data rows
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim() === '') continue;
+          
+          // Handle quoted fields properly
+          let row = {};
+          const lineMatch = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+          if (lineMatch) {
+            headers.forEach((header, index) => {
+              if (index < lineMatch.length) {
+                let value = lineMatch[index].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+                row[header] = value;
+              } else {
+                row[header] = '';
+              }
+            });
+            data.push(row);
+          }
+        }
+        
+        if (data.length === 0) {
+          showAlert('No valid data rows found in the CSV file.', 'danger');
+          return;
+        }
+        
+        // Add rows to table
+        table.rows.add(data).draw();
+        
+        // Save to local storage
+        saveToLocalStorage(data);
+        
+        showAlert(`Successfully imported ${data.length} nonconformance records.`, 'success');
+        $('#csvFile').val('');
+      }
+      
+      // Clear data button click handler
+      $('#clearBtn').click(function() {
+        if (confirm('Are you sure you want to clear all nonconformance records? This cannot be undone.')) {
+          table.clear().draw();
+          localStorage.removeItem('nonconformanceData');
+          showAlert('All nonconformance records have been cleared.', 'success');
+        }
+      });
+      
+      // Add new record button click handler
+      $('#addNewBtn').click(function() {
+        $('#modalTitle').text('Add New Nonconformance Record');
+        $('#recordForm')[0].reset();
+        $('#recordId').val('');
+        $('#dateReported').val(new Date().toISOString().substr(0, 10)); // Set today's date
+        $('#recordModal').css('display', 'block');
+      });
+      
+      // View record button click handler
+      $('#nonconformanceTable').on('click', '.btn-view', function() {
+        const data = table.row($(this).parents('tr')).data();
+        viewRecord(data);
+      });
+      
+      // Edit record button click handler
+      $('#nonconformanceTable').on('click', '.btn-edit', function() {
+        const data = table.row($(this).parents('tr')).data();
+        editRecord(data);
+      });
+      
+      // Delete record button click handler
+      $('#nonconformanceTable').on('click', '.btn-delete', function() {
+        if (confirm('Are you sure you want to delete this record? This cannot be undone.')) {
+          const row = $(this).parents('tr');
+          const data = table.row(row).data();
+          
+          // Remove from table
+          table.row(row).remove().draw();
+          
+          // Update local storage
+          saveToLocalStorage(table.data().toArray());
+          
+          showAlert('Record has been deleted.', 'success');
+        }
+      });
+      
+      // Modal close button
+      $('.close, #cancelBtn').click(function() {
+        $('#recordModal').css('display', 'none');
+      });
+      
+      // Close modal if clicking outside of it
+      $(window).click(function(event) {
+        if ($(event.target).is('#recordModal')) {
+          $('#recordModal').css('display', 'none');
+        }
+      });
+      
+      // Form submit handler
+      $('#recordForm').submit(function(e) {
+        e.preventDefault();
+        saveRecord();
+      });
+      
+      // Export to CSV button
+      $('#exportCsvBtn').click(function() {
+        exportToCSV();
+      });
+      
+      // Export to PDF button
+      $('#exportPdfBtn').click(function() {
+        exportToPDF();
+      });
+      
+      // Functions
+      function viewRecord(data) {
+        $('#modalTitle').text('View Nonconformance Record');
+        populateForm(data);
+        
+        // Disable all form fields for view mode
+        $('#recordForm input, #recordForm select, #recordForm textarea').attr('disabled', true);
+        $('#saveBtn').hide();
+        
+        $('#recordModal').css('display', 'block');
+      }
+      
+      function editRecord(data) {
+        $('#modalTitle').text('Edit Nonconformance Record');
+        populateForm(data);
+        
+        // Enable all form fields for edit mode
+        $('#recordForm input, #recordForm select, #recordForm textarea').attr('disabled', false);
+        $('#saveBtn').show();
+        
+        $('#recordModal').css('display', 'block');
+      }
+      
+      function populateForm(data) {
+        $('#recordId').val(data.id);
+        $('#dateReported').val(data.date_reported);
+        $('#productId').val(data.product_id);
+        $('#productName').val(data.product_name);
+        $('#issueDescription').val(data.issue_description);
+        $('#severity').val(data.severity);
+        $('#status').val(data.status);
+        $('#reportedBy').val(data.reported_by);
+        $('#assignedTo').val(data.assigned_to);
+        $('#correctiveAction').val(data.corrective_action);
+        $('#completionDate').val(data.completion_date);
+      }
+      
+      function saveRecord() {
+        const formData = {
+          id: $('#recordId').val() || generateId(),
+          date_reported: $('#dateReported').val(),
+          product_id: $('#productId').val(),
+          product_name: $('#productName').val(),
+          issue_description: $('#issueDescription').val(),
+          severity: $('#severity').val(),
+          status: $('#status').val(),
+          reported_by: $('#reportedBy').val(),
+          assigned_to: $('#assignedTo').val(),
+          corrective_action: $('#correctiveAction').val(),
+          completion_date: $('#completionDate').val()
+        };
+        
+        // Check if this is an update or new record
+        const existingData = table.data().toArray();
+        const existingIndex = existingData.findIndex(r => r.id === formData.id);
+        
+        if (existingIndex >= 0) {
+          // Update existing record
+          table.row(existingIndex).data(formData).draw();
+          showAlert('Record updated successfully.', 'success');
+        } else {
+          // Add new record
+          table.row.add(formData).draw();
+          showAlert('New record added successfully.', 'success');
+        }
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        // Close modal
+        $('#recordModal').css('display', 'none');
+      }
+      
+      function generateId() {
+        const data = table.data().toArray();
+        if (data.length === 0) return '1';
+        
+        // Find the maximum ID and increment by 1
+        const maxId = Math.max(...data.map(r => parseInt(r.id) || 0));
+        return (maxId + 1).toString();
+      }
+      
+      function saveToLocalStorage(data) {
+        localStorage.setItem('nonconformanceData', JSON.stringify(data));
+      }
+      
+      function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('nonconformanceData');
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Array.isArray(data) && data.length > 0) {
+              table.clear();
+              table.rows.add(data).draw();
+              showAlert(`Loaded ${data.length} saved nonconformance records.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error loading saved data:', e);
+          }
+        }
+      }
+      
+      function showAlert(message, type) {
+        const alertBox = $('#alertBox');
+        alertBox.text(message);
+        alertBox.removeClass('alert-success alert-danger');
+        alertBox.addClass(`alert-${type}`);
+        alertBox.show();
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          alertBox.fadeOut();
+        }, 5000);
+      }
+      
+      function exportToCSV() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // Get all headers
+        const headers = ['id', 'date_reported', 'product_id', 'product_name', 'issue_description', 'severity', 'status', 'reported_by', 'assigned_to', 'corrective_action', 'completion_date'];
+        
+        // Create CSV content
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        
+        // Add headers
+        csvContent += headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = headers.map(header => {
+            let value = row[header] || '';
+            // Escape quotes and wrap in quotes if the value contains commas or quotes
+            if (value.includes('"') || value.includes(',')) {
+              value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+          });
+          csvContent += values.join(',') + '\n';
+        });
+        
+        // Create download link
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `nonconformance_data_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        
+        // Trigger download
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+      }
+      
+      function exportToPDF() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // PDF initialization
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('MRC Global Product Nonconformance Report', 14, 20);
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+        
+        // Prepare table data
+        const tableColumn = ['ID', 'Date', 'Product ID', 'Product', 'Issue', 'Severity', 'Status', 'Reporter', 'Assigned'];
+        const tableRows = [];
+        
+        data.forEach(item => {
+          const rowData = [
+            item.id,
+            item.date_reported,
+            item.product_id,
+            item.product_name,
+            item.issue_description.length > 30 ? item.issue_description.substring(0, 27) + '...' : item.issue_description,
+            item.severity,
+            item.status,
+            item.reported_by,
+            item.assigned_to
+          ];
+          tableRows.push(rowData);
+        });
+        
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 35,
+          styles: { overflow: 'linebreak' },
+          columnStyles: { 4: { cellWidth: 30 } }, // Make issue description column wider
+          headStyles: { fillColor: [0, 51, 102] } // MRC blue color
+        });
+        
+        // Save the PDF
+        doc.save(`nonconformance_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      }
+    });
+    
+    // Google Translate Integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

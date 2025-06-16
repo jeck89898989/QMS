@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global ISO Certified Locations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f7fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #003366;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .home-link, .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .home-link i, .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .home-link:hover, .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .csv-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-container input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #003366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background-color: #004c99;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable th, 
+    table.dataTable td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+    }
+
+    table.dataTable thead th {
+      background-color: #f2f2f2;
+      border-bottom: 2px solid #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dataTables_wrapper .dataTables_length, 
+    .dataTables_wrapper .dataTables_filter, 
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_paginate {
+      margin-bottom: 10px;
+    }
+
+    .status-current {
+      background-color: #c3e6cb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .status-expiring {
+      background-color: #ffeeba;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    .status-expired {
+      background-color: #f8d7da;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #721c24;
+    }
+
+    .status-pending {
+      background-color: #b8daff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #004085;
+    }
+
+    .export-options {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sample-data {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .sample-data h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .sample-data pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    .help-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Badge styles for certification types */
+    .cert-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      background-color: #e9ecef;
+      color: #495057;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .cert-iso9001 {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .cert-iso14001 {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .cert-iso45001 {
+      background-color: #fd7e14;
+      color: white;
+    }
+
+    .cert-iso27001 {
+      background-color: #6f42c1;
+      color: white;
+    }
+
+    /* Google Translate */
+    #google_translate_element {
+      margin-left: 15px;
+    }
+    
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    
+    body {
+        top: 0px !important; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="mrc_logo.png" alt="MRC Global Logo" class="logo">
+      <div class="header-text">
+        <h1>ISO Certified Locations</h1>
+        <p class="subtitle">Certification Management and Tracking</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="home-link"><i class="fas fa-home"></i> Home</a>
+        <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> Help</a>
+        <div id="google_translate_element"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <h2>ISO Certification Management</h2>
+      <p>Upload, manage, and track ISO certifications for MRC Global locations worldwide. Monitor certification status, renewal dates, and certification scopes.</p>
+      
+      <div id="alertBox" class="alert" style="display: none;"></div>
+      
+      <div class="csv-controls">
+        <div class="control-group">
+          <label for="csvFile">Import ISO Certification Data (CSV)</label>
+          <div class="file-input-container">
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="importBtn" class="btn btn-primary"><i class="fas fa-file-import"></i> Import Data</button>
+            <button id="clearBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Data</button>
+          </div>
+          <p class="help-text">Select a CSV file containing ISO certification records to import</p>
+        </div>
+        
+        <button id="addNewBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Location</button>
+      </div>
+      
+      <div class="sample-data">
+        <h3>Sample CSV Format</h3>
+        <p>Your CSV file should follow this structure (header row required):</p>
+        <pre>id,location_name,address,country,certification_type,certification_number,issue_date,expiry_date,status,scope,certification_body,location_manager,contact_email,notes
+1,"Houston Distribution Center","12345 Main Street, Houston, TX 77002","USA","ISO 9001:2015, ISO 14001:2015","CERT-12345","2021-06-15","2024-06-14","Current","Valve supply and distribution, technical services","Bureau Veritas","John Smith","john.smith@mrcglobal.com","Annual surveillance audit scheduled for May 2023"
+2,"Singapore Manufacturing Facility","123 Jurong East Street, Singapore 609731","Singapore","ISO 9001:2015, ISO 45001:2018","SGP-7890","2022-03-10","2025-03-09","Current","Manufacturing of valve components, assembly and testing","DNV GL","Maria Chen","maria.chen@mrcglobal.com","Expanded scope in 2022 to include testing services"
+3,"Aberdeen Service Center","27 Wellheads Crescent, Dyce, Aberdeen AB21 7GD","United Kingdom","ISO 9001:2015","UK-4567","2020-08-12","2023-08-11","Expiring","Valve repair and servicing, pressure testing","Lloyd's Register","James Wilson","james.wilson@mrcglobal.com","Renewal audit scheduled for July 2023"</pre>
+      </div>
+      
+      <div class="table-container">
+        <table id="certificationsTable" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Location Name</th>
+              <th>Country</th>
+              <th>Certification Type</th>
+              <th>Certification Number</th>
+              <th>Issue Date</th>
+              <th>Expiry Date</th>
+              <th>Status</th>
+              <th>Certification Body</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="export-options">
+        <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export to CSV</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      </div>
+    </div>
+    
+    <!-- Modal for viewing/editing location details -->
+    <div id="locationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">ISO Certification Record</h2>
+        <form id="locationForm">
+          <input type="hidden" id="recordId">
+          
+          <div class="form-group">
+            <label for="locationName">Location Name</label>
+            <input type="text" id="locationName" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" rows="2" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="certificationType">Certification Type(s)</label>
+            <input type="text" id="certificationType" required placeholder="e.g., ISO 9001:2015, ISO 14001:2015">
+          </div>
+          
+          <div class="form-group">
+            <label for="certificationNumber">Certification Number</label>
+            <input type="text" id="certificationNumber" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="issueDate">Issue Date</label>
+            <input type="date" id="issueDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="expiryDate">Expiry Date</label>
+            <input type="date" id="expiryDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Current">Current</option>
+              <option value="Expiring">Expiring (Within 90 days)</option>
+              <option value="Expired">Expired</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="scope">Certification Scope</label>
+            <textarea id="scope" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="certificationBody">Certification Body</label>
+            <input type="text" id="certificationBody" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="locationManager">Location Manager</label>
+            <input type="text" id="locationManager" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="contactEmail">Contact Email</label>
+            <input type="email" id="contactEmail" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" rows="2"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> MRC Global. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      let table = $('#certificationsTable').DataTable({
+        columns: [
+          { data: 'id' },
+          { data: 'location_name' },
+          { data: 'country' },
+          { 
+            data: 'certification_type',
+            render: function(data) {
+              // Create badges for different certification types
+              if (!data) return '';
+              
+              const certTypes = data.split(',').map(cert => cert.trim());
+              let badges = '';
+              
+              certTypes.forEach(cert => {
+                let className = 'cert-badge';
+                
+                if (cert.includes('9001')) className += ' cert-iso9001';
+                else if (cert.includes('14001')) className += ' cert-iso14001';
+                else if (cert.includes('45001')) className += ' cert-iso45001';
+                else if (cert.includes('27001')) className += ' cert-iso27001';
+                
+                badges += `<span class="${className}">${cert}</span>`;
+              });
+              
+              return badges;
+            }
+          },
+          { data: 'certification_number' },
+          { data: 'issue_date' },
+          { data: 'expiry_date' },
+          { 
+            data: 'status',
+            render: function(data) {
+              return `<span class="status-${data.toLowerCase()}">${data}</span>`;
+            }
+          },
+          { data: 'certification_body' },
+          { 
+            data: null,
+            defaultContent: '<button class="btn-view"><i class="fas fa-eye"></i></button> <button class="btn-edit"><i class="fas fa-edit"></i></button> <button class="btn-delete"><i class="fas fa-trash"></i></button>',
+            orderable: false 
+          }
+        ]
+      });
+      
+      // Check for local storage data on load
+      loadFromLocalStorage();
+      
+      // Import CSV button click handler
+      $('#importBtn').click(function() {
+        const fileInput = $('#csvFile')[0];
+        if (fileInput.files.length === 0) {
+          showAlert('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const csv = e.target.result;
+          processCSV(csv);
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process CSV data
+      function processCSV(csv) {
+        const lines = csv.split('\n');
+        if (lines.length < 2) {
+          showAlert('The CSV file appears to be empty or invalid.', 'danger');
+          return;
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const expectedHeaders = ['id', 'location_name', 'address', 'country', 'certification_type', 'certification_number', 'issue_date', 'expiry_date', 'status', 'scope', 'certification_body', 'location_manager', 'contact_email', 'notes'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          showAlert(`CSV is missing required columns: ${missingHeaders.join(', ')}`, 'danger');
+          return;
+        }
+        
+        // Clear existing data
+        table.clear();
+        
+        // Process data rows
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim() === '') continue;
+          
+          // Handle quoted fields properly
+          try {
+            // This regex handles quoted fields that may contain commas
+            const pattern = /(".*?"|[^,"]*)(?=\s*,|\s*$)/g;
+            const lineMatch = [...lines[i].matchAll(pattern)].map(m => m[0]);
+            
+            if (lineMatch) {
+              let row = {};
+              headers.forEach((header, index) => {
+                if (index < lineMatch.length) {
+                  let value = lineMatch[index].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+                  row[header] = value;
+                } else {
+                  row[header] = '';
+                }
+              });
+              data.push(row);
+            }
+          } catch (error) {
+            console.error("Error parsing line:", lines[i], error);
+            continue;
+          }
+        }
+        
+        if (data.length === 0) {
+          showAlert('No valid data rows found in the CSV file.', 'danger');
+          return;
+        }
+        
+        // Add rows to table
+        table.rows.add(data).draw();
+        
+        // Update expiry status based on date
+        updateCertificationStatus();
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        showAlert(`Successfully imported ${data.length} location certification records.`, 'success');
+        $('#csvFile').val('');
+      }
+      
+      // Function to update certification status based on expiry date
+      function updateCertificationStatus() {
+        const data = table.data().toArray();
+        const today = new Date();
+        
+        // Create a date 90 days in the future
+        const ninetyDaysFromNow = new Date();
+        ninetyDaysFromNow.setDate(today.getDate() + 90);
+        
+        // Update status based on date
+        data.forEach(item => {
+          if (item.expiry_date) {
+            const expiryDate = new Date(item.expiry_date);
+            
+            if (expiryDate < today) {
+              item.status = 'Expired';
+            } else if (expiryDate <= ninetyDaysFromNow && item.status === 'Current') {
+              item.status = 'Expiring';
+            }
+          }
+        });
+        
+        // Update the table
+        table.clear().rows.add(data).draw();
+      }
+      
+      // Clear data button click handler
+      $('#clearBtn').click(function() {
+        if (confirm('Are you sure you want to clear all ISO certification records? This cannot be undone.')) {
+          table.clear().draw();
+          localStorage.removeItem('isoCertificationData');
+          showAlert('All ISO certification records have been cleared.', 'success');
+        }
+      });
+      
+      // Add new location button click handler
+      $('#addNewBtn').click(function() {
+        $('#modalTitle').text('Add New ISO Certified Location');
+        $('#locationForm')[0].reset();
+        $('#recordId').val('');
+        $('#issueDate').val(new Date().toISOString().substr(0, 10)); // Set today's date
+        
+        // Set expiry date to 3 years from today by default
+        const expiryDate = new Date();
+        expiryDate.setFullYear(expiryDate.getFullYear() + 3);
+        $('#expiryDate').val(expiryDate.toISOString().substr(0, 10));
+        
+        $('#locationModal').css('display', 'block');
+      });
+      
+      // View location button click handler
+      $('#certificationsTable').on('click', '.btn-view', function() {
+        const data = table.row($(this).parents('tr')).data();
+        viewLocation(data);
+      });
+      
+      // Edit location button click handler
+      $('#certificationsTable').on('click', '.btn-edit', function() {
+        const data = table.row($(this).parents('tr')).data();
+        editLocation(data);
+      });
+      
+      // Delete location button click handler
+      $('#certificationsTable').on('click', '.btn-delete', function() {
+        if (confirm('Are you sure you want to delete this location record? This cannot be undone.')) {
+          const row = $(this).parents('tr');
+          const data = table.row(row).data();
+          
+          // Remove from table
+          table.row(row).remove().draw();
+          
+          // Update local storage
+          saveToLocalStorage(table.data().toArray());
+          
+          showAlert('Location record has been deleted.', 'success');
+        }
+      });
+      
+      // Modal close button
+      $('.close, #cancelBtn').click(function() {
+        $('#locationModal').css('display', 'none');
+      });
+      
+      // Close modal if clicking outside of it
+      $(window).click(function(event) {
+        if ($(event.target).is('#locationModal')) {
+          $('#locationModal').css('display', 'none');
+        }
+      });
+      
+      // Form submit handler
+      $('#locationForm').submit(function(e) {
+        e.preventDefault();
+        saveLocation();
+      });
+      
+      // Export to CSV button
+      $('#exportCsvBtn').click(function() {
+        exportToCSV();
+      });
+      
+      // Export to PDF button
+      $('#exportPdfBtn').click(function() {
+        exportToPDF();
+      });
+      
+      // Functions
+      function viewLocation(data) {
+        $('#modalTitle').text('View ISO Certification Record');
+        populateForm(data);
+        
+        // Disable all form fields for view mode
+        $('#locationForm input, #locationForm select, #locationForm textarea').attr('disabled', true);
+        $('#saveBtn').hide();
+        
+        $('#locationModal').css('display', 'block');
+      }
+      
+      function editLocation(data) {
+        $('#modalTitle').text('Edit ISO Certification Record');
+        populateForm(data);
+        
+        // Enable all form fields for edit mode
+        $('#locationForm input, #locationForm select, #locationForm textarea').attr('disabled', false);
+        $('#saveBtn').show();
+        
+        $('#locationModal').css('display', 'block');
+      }
+      
+      function populateForm(data) {
+        $('#recordId').val(data.id);
+        $('#locationName').val(data.location_name);
+        $('#address').val(data.address);
+        $('#country').val(data.country);
+        $('#certificationType').val(data.certification_type);
+        $('#certificationNumber').val(data.certification_number);
+        $('#issueDate').val(data.issue_date);
+        $('#expiryDate').val(data.expiry_date);
+        $('#status').val(data.status);
+        $('#scope').val(data.scope);
+        $('#certificationBody').val(data.certification_body);
+        $('#locationManager').val(data.location_manager);
+        $('#contactEmail').val(data.contact_email);
+        $('#notes').val(data.notes);
+      }
+      
+      function saveLocation() {
+        const formData = {
+          id: $('#recordId').val() || generateId(),
+          location_name: $('#locationName').val(),
+          address: $('#address').val(),
+          country: $('#country').val(),
+          certification_type: $('#certificationType').val(),
+          certification_number: $('#certificationNumber').val(),
+          issue_date: $('#issueDate').val(),
+          expiry_date: $('#expiryDate').val(),
+          status: $('#status').val(),
+          scope: $('#scope').val(),
+          certification_body: $('#certificationBody').val(),
+          location_manager: $('#locationManager').val(),
+          contact_email: $('#contactEmail').val(),
+          notes: $('#notes').val()
+        };
+        
+        // Check if this is an update or new record
+        const existingData = table.data().toArray();
+        const existingIndex = existingData.findIndex(r => r.id === formData.id);
+        
+        if (existingIndex >= 0) {
+          // Update existing record
+          table.row(existingIndex).data(formData).draw();
+          showAlert('Record updated successfully.', 'success');
+        } else {
+          // Add new record
+          table.row.add(formData).draw();
+          showAlert('New record added successfully.', 'success');
+        }
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        // Close modal
+        $('#locationModal').css('display', 'none');
+      }
+      
+      function generateId() {
+        const data = table.data().toArray();
+        if (data.length === 0) return '1';
+        
+        // Find the maximum ID and increment by 1
+        const maxId = Math.max(...data.map(r => parseInt(r.id) || 0));
+        return (maxId + 1).toString();
+      }
+      
+      function saveToLocalStorage(data) {
+        localStorage.setItem('isoCertificationData', JSON.stringify(data));
+      }
+      
+      function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('isoCertificationData');
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Array.isArray(data) && data.length > 0) {
+              table.clear();
+              table.rows.add(data).draw();
+              
+              // Update status based on current dates
+              updateCertificationStatus();
+              
+              showAlert(`Loaded ${data.length} saved ISO certification records.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error loading saved data:', e);
+          }
+        }
+      }
+      
+      function showAlert(message, type) {
+        const alertBox = $('#alertBox');
+        alertBox.text(message);
+        alertBox.removeClass('alert-success alert-danger');
+        alertBox.addClass(`alert-${type}`);
+        alertBox.show();
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          alertBox.fadeOut();
+        }, 5000);
+      }
+      
+      function exportToCSV() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // Get all headers
+        const headers = ['id', 'location_name', 'address', 'country', 'certification_type', 'certification_number', 'issue_date', 'expiry_date', 'status', 'scope', 'certification_body', 'location_manager', 'contact_email', 'notes'];
+        
+        // Create CSV content
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        
+        // Add headers
+        csvContent += headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = headers.map(header => {
+            let value = row[header] || '';
+            // Escape quotes and wrap in quotes if the value contains commas or quotes
+            if (value.includes('"') || value.includes(',')) {
+              value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+          });
+          csvContent += values.join(',') + '\n';
+        });
+        
+        // Create download link
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `iso_certification_data_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        
+        // Trigger download
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+      }
+      
+      function exportToPDF() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // PDF initialization
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('MRC Global ISO Certified Locations', 14, 20);
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+        
+        // Prepare table data
+        const tableColumn = ['ID', 'Location', 'Country', 'Certification', 'Cert. Number', 'Issue Date', 'Expiry Date', 'Status'];
+        const tableRows = [];
+        
+        data.forEach(item => {
+          const rowData = [
+            item.id,
+            item.location_name.length > 20 ? item.location_name.substring(0, 17) + '...' : item.location_name,
+            item.country,
+            item.certification_type.length > 15 ? item.certification_type.substring(0, 12) + '...' : item.certification_type,
+            item.certification_number,
+            item.issue_date,
+            item.expiry_date,
+            item.status
+          ];
+          tableRows.push(rowData);
+        });
+        
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 35,
+          styles: { overflow: 'linebreak' },
+          columnStyles: { 
+            1: { cellWidth: 30 }, // Location name
+            3: { cellWidth: 25 }  // Certification type
+          },
+          headStyles: { fillColor: [0, 51, 102] } // MRC blue color
+        });
+        
+        // Save the PDF
+        doc.save(`iso_certifications_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      }
+    });
+    
+    // Google Translate Integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
+```
+
+``` operation.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global Operations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f7fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #003366;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .home-link, .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .home-link i, .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .home-link:hover, .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .csv-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-container input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #003366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background-color: #004c99;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable th, 
+    table.dataTable td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+    }
+
+    table.dataTable thead th {
+      background-color: #f2f2f2;
+      border-bottom: 2px solid #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dataTables_wrapper .dataTables_length, 
+    .dataTables_wrapper .dataTables_filter, 
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_paginate {
+      margin-bottom: 10px;
+    }
+
+    .status-active {
+      background-color: #c3e6cb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .status-review {
+      background-color: #b8daff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #004085;
+    }
+
+    .status-draft {
+      background-color: #ffeeba;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    .status-archived {
+      background-color: #f8d7da;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #721c24;
+    }
+
+    .priority-high {
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .priority-medium {
+      color: #856404;
+    }
+
+    .priority-low {
+      color: #155724;
+    }
+
+    .export-options {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sample-data {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .sample-data h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .sample-data pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    .help-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Google Translate */
+    #google_translate_element {
+      margin-left: 15px;
+    }
+    
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    
+    body {
+        top: 0px !important; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="mrc_logo.png" alt="MRC Global Logo" class="logo">
+      <div class="header-text">
+        <h1>Operations</h1>
+        <p class="subtitle">Management and Tracking System</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="home-link"><i class="fas fa-home"></i> Home</a>
+        <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> Help</a>
+        <div id="google_translate_element"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <h2>Operations Management</h2>
+      <p>Upload, manage, and track operational activities. The system allows monitoring and management of operations from initiation through completion.</p>
+      
+      <div id="alertBox" class="alert" style="display: none;"></div>
+      
+      <div class="csv-controls">
+        <div class="control-group">
+          <label for="csvFile">Import Operations Data (CSV)</label>
+          <div class="file-input-container">
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="importBtn" class="btn btn-primary"><i class="fas fa-file-import"></i> Import Data</button>
+            <button id="clearBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Data</button>
+          </div>
+          <p class="help-text">!Select a CSV file containing operations records to import</p>
+        </div>
+        
+        <button id="addNewBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Operation</button>
+      </div>
+      
+      <div class="sample-data">
+        <h3>Sample CSV Format</h3>
+        <p>Your CSV file should follow this structure (header row required):</p>
+        <pre>id,operation_id,operation_name,location,department,description,priority,status,assigned_to,created_at,completion_date,notes
+1,OPR-1234,"New Valve Installation","Main Warehouse","Operations","Installations of new valves for different applications",Medium,Open,John Smith,2023-11-01,2023-11-10,"Initial inspection revealed minor defects that need fixing"
+2,OPR-5678,"Pipeline Maintenance","Field Operations","Inspections and repairs of pipeline infrastructure",Low,In Progress,Maria Garcia,2023-11-05,,""
+3,OPR-9012,"Equipment Calibration","Calibration Lab","Calibration and validation of different equipment for safety and quality purposes",High,Completed,Robert Taylor,2023-11-12,2023-11-15,"Additional training provided to the technician"
+4,OPR-7890,"Training Session","Training Room","Training session for new employees on safety protocols and company policies",Low,Completed,Chris Taylor,2023-11-15,2023-11-16,"Feedback from trainees indicated improved understanding of safety procedures"
+5,OPR-4567,"Safety Audit","Quality Assurance","Comprehensive safety audit to identify potential hazards and improve overall safety",High,Pending,James Wilson,2023-11-18,,""
+        </pre>
+      </div>
+      
+      <div class="table-container">
+        <table id="operationsTable" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Operation ID</th>
+              <th>Operation Name</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Assigned To</th>
+              <th>Created At</th>
+              <th>Completion Date</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="export-options">
+        <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export to CSV</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      </div>
+    </div>
+    
+    <!-- Modal for viewing/editing operation details -->
+    <div id="operationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Operation Record</h2>
+        <form id="operationForm">
+          <input type="hidden" id="recordId">
+          
+          <div class="form-group">
+            <label for="operationId">Operation ID</label>
+            <input type="text" id="operationId" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="operationName">Operation Name</label>
+            <input type="text" id="operationName" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" required>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignedTo">Assigned To</label>
+            <input type="text" id="assignedTo">
+          </div>
+          
+          <div class="form-group">
+            <label for="createdAt">Created At</label>
+            <input type="date" id="createdAt" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="completionDate">Completion Date</label>
+            <input type="date" id="completionDate">
+          </div>
+          
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" rows="2"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> MRC Global. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      let table = $('#operationsTable').DataTable({
+        columns: [
+          { data: 'id' },
+          { data: 'operation_id' },
+          { data: 'operation_name' },
+          { data: 'location' },
+          { data: 'department' },
+          { data: 'description' },
+          { 
+            data: 'priority',
+            render: function(data) {
+              let className = '';
+              if (data === 'High') className = 'priority-high';
+              else if (data === 'Medium') className = 'priority-medium';
+              else if (data === 'Low') className = 'priority-low';
+              return `<span class="${className}">${data}</span>`;
+            }
+          },
+          { data: 'status',
+            render: function(data) {
+              return `<span class="status-${data.toLowerCase()}">${data}</span>`;
+            }
+          },
+          { data: 'assigned_to' },
+          { data: 'created_at' },
+          { data: 'completion_date' },
+          { data: 'notes' },
+          { 
+            data: null,
+            defaultContent: '<button class="btn-view"><i class="fas fa-eye"></i></button> <button class="btn-edit"><i class="fas fa-edit"></i></button> <button class="btn-delete"><i class="fas fa-trash"></i></button>',
+            orderable: false 
+          }
+        ]
+      });
+      
+      // Check for local storage data on load
+      loadFromLocalStorage();
+      
+      // Import CSV button click handler
+      $('#importBtn').click(function() {
+        const fileInput = $('#csvFile')[0];
+        if (fileInput.files.length === 0) {
+          showAlert('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const csv = e.target.result;
+          processCSV(csv);
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process CSV data
+      function processCSV(csv) {
+        const lines = csv.split('\n');
+        if (lines.length < 2) {
+          showAlert('The CSV file appears to be empty or invalid.', 'danger');
+          return;
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const expectedHeaders = ['id', 'operation_id', 'operation_name', 'location', 'department', 'description', 'priority', 'status', 'assigned_to', 'created_at', 'completion_date', 'notes'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          showAlert(`CSV is missing required columns: ${missingHeaders.join(', ')}`, 'danger');
+          return;
+        }
+        
+        // Clear existing data
+        table.clear();
+        
+        // Process data rows
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim() === '') continue;
+          
+          // Handle quoted fields properly
+          try {
+            // This regex handles quoted fields that may contain commas
+            const pattern = /(".*?"|[^,"]*)(?=\s*,|\s*$)/g;
+            const lineMatch = [...lines[i].matchAll(pattern)].map(m => m[0]);
+            
+            if (lineMatch) {
+              let row = {};
+              headers.forEach((header, index) => {
+                if (index < lineMatch.length) {
+                  let value = lineMatch[index].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+                  row[header] = value;
+                } else {
+                  row[header] = '';
+                }
+              });
+              data.push(row);
+            }
+          } catch (error) {
+            console.error("Error parsing line:", lines[i], error);
+            continue;
+          }
+        }
+        
+        if (data.length === 0) {
+          showAlert('No valid data rows found in the CSV file.', 'danger');
+          return;
+        }
+        
+        // Add rows to table
+        table.rows.add(data).draw();
+        
+        // Save to local storage
+        saveToLocalStorage(data);
+        
+        showAlert(`Successfully imported ${data.length} operations records.`, 'success');
+        $('#csvFile').val('');
+      }
+      
+      // Clear data button click handler
+      $('#clearBtn').click(function() {
+        if (confirm('Are you sure you want to clear all operations records? This cannot be undone.')) {
+          table.clear().draw();
+          localStorage.removeItem('operationsData');
+          showAlert('All operations records have been cleared.', 'success');
+        }
+      });
+      
+      // Add new operation button click handler
+      $('#addNewBtn').click(function() {
+        $('#modalTitle').text('Add New Operation');
+        $('#operationForm')[0].reset();
+        $('#recordId').val('');
+        $('#createdAt').val(new Date().toISOString().substr(0, 10)); // Set today's date
+        
+        // Set completion date to 7 days from today by default
+        const completionDate = new Date();
+        completionDate.setDate(completionDate.getDate() + 7);
+        $('#completionDate').val(completionDate.toISOString().substr(0, 10));
+        
+        $('#operationModal').css('display', 'block');
+      });
+      
+      // View operation button click handler
+      $('#operationsTable').on('click', '.btn-view', function() {
+        const data = table.row($(this).parents('tr')).data();
+        viewOperation(data);
+      });
+      
+      // Edit operation button click handler
+      $('#operationsTable').on('click', '.btn-edit', function() {
+        const data = table.row($(this).parents('tr')).data();
+        editOperation(data);
+      });
+      
+      // Delete operation button click handler
+      $('#operationsTable').on('click', '.btn-delete', function() {
+        if (confirm('Are you sure you want to delete this operation record? This cannot be undone.')) {
+          const row = $(this).parents('tr');
+          const data = table.row(row).data();
+          
+          // Remove from table
+          table.row(row).remove().draw();
+          
+          // Update local storage
+          saveToLocalStorage(table.data().toArray());
+          
+          showAlert('Operation record has been deleted.', 'success');
+        }
+      });
+      
+      // Modal close button
+      $('.close, #cancelBtn').click(function() {
+        $('#operationModal').css('display', 'none');
+      });
+      
+      // Close modal if clicking outside of it
+      $(window).click(function(event) {
+        if ($(event.target).is('#operationModal')) {
+          $('#operationModal').css('display', 'none');
+        }
+      });
+      
+      // Form submit handler
+      $('#operationForm').submit(function(e) {
+        e.preventDefault();
+        saveOperation();
+      });
+      
+      // Export to CSV button
+      $('#exportCsvBtn').click(function() {
+        exportToCSV();
+      });
+      
+      // Export to PDF button
+      $('#exportPdfBtn').click(function() {
+        exportToPDF();
+      });
+      
+      // Functions
+      function viewOperation(data) {
+        $('#modalTitle').text('View Operation Record');
+        populateForm(data);
+        
+        // Disable all form fields for view mode
+        $('#operationForm input, #operationForm select, #operationForm textarea').attr('disabled', true);
+        $('#saveBtn').hide();
+        
+        $('#operationModal').css('display', 'block');
+      }
+      
+      function editOperation(data) {
+        $('#modalTitle').text('Edit Operation Record');
+        populateForm(data);
+        
+        // Enable all form fields for edit mode
+        $('#operationForm input, #operationForm select, #operationForm textarea').attr('disabled', false);
+        $('#saveBtn').show();
+        
+        $('#operationModal').css('display', 'block');
+      }
+      
+      function populateForm(data) {
+        $('#recordId').val(data.id);
+        $('#operationId').val(data.operation_id);
+        $('#operationName').val(data.operation_name);
+        $('#location').val(data.location);
+        $('#department').val(data.department);
+        $('#description').val(data.description);
+        $('#priority').val(data.priority);
+        $('#status').val(data.status);
+        $('#assignedTo').val(data.assigned_to);
+        $('#createdAt').val(data.created_at);
+        $('#completionDate').val(data.completion_date);
+        $('#notes').val(data.notes);
+      }
+      
+      function saveOperation() {
+        const formData = {
+          id: $('#recordId').val() || generateId(),
+          operation_id: $('#operationId').val(),
+          operation_name: $('#operationName').val(),
+          location: $('#location').val(),
+          department: $('#department').val(),
+          description: $('#description').val(),
+          priority: $('#priority').val(),
+          status: $('#status').val(),
+          assigned_to: $('#assignedTo').val(),
+          created_at: $('#createdAt').val(),
+          completion_date: $('#completionDate').val(),
+          notes: $('#notes').val()
+        };
+        
+        // Check if this is an update or new record
+        const existingData = table.data().toArray();
+        const existingIndex = existingData.findIndex(r => r.id === formData.id);
+        
+        if (existingIndex >= 0) {
+          // Update existing record
+          table.row(existingIndex).data(formData).draw();
+          showAlert('Record updated successfully.', 'success');
+        } else {
+          // Add new record
+          table.row.add(formData).draw();
+          showAlert('New record added successfully.', 'success');
+        }
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        // Close modal
+        $('#operationModal').css('display', 'none');
+      }
+      
+      function generateId() {
+        const data = table.data().toArray();
+        if (data.length === 0) return '1';
+        
+        // Find the maximum ID and increment by 1
+        const maxId = Math.max(...data.map(r => parseInt(r.id) || 0));
+        return (maxId + 1).toString();
+      }
+      
+      function saveToLocalStorage(data) {
+        localStorage.setItem('operationsData', JSON.stringify(data));
+      }
+      
+      function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('operationsData');
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Array.isArray(data) && data.length > 0) {
+              table.clear();
+              table.rows.add(data).draw();
+              showAlert(`Loaded ${data.length} saved operations records.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error loading saved data:', e);
+          }
+        }
+      }
+      
+      function showAlert(message, type) {
+        const alertBox = $('#alertBox');
+        alertBox.text(message);
+        alertBox.removeClass('alert-success alert-danger');
+        alertBox.addClass(`alert-${type}`);
+        alertBox.show();
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          alertBox.fadeOut();
+        }, 5000);
+      }
+      
+      function exportToCSV() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // Get all headers
+        const headers = ['id', 'operation_id', 'operation_name', 'location', 'department', 'description', 'priority', 'status', 'assigned_to', 'created_at', 'completion_date', 'notes'];
+        
+        // Create CSV content
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        
+        // Add headers
+        csvContent += headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = headers.map(header => {
+            let value = row[header] || '';
+            // Escape quotes and wrap in quotes if the value contains commas or quotes
+            if (value.includes('"') || value.includes(',')) {
+              value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+          });
+          csvContent += values.join(',') + '\n';
+        });
+        
+        // Create download link
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `operations_data_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        
+        // Trigger download
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+      }
+      
+      function exportToPDF() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // PDF initialization
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('MRC Global Operations Report', 14, 20);
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+        
+        // Prepare table data
+        const tableColumn = ['ID', 'Operation ID', 'Operation Name', 'Location', 'Department', 'Description', 'Priority', 'Status', 'Assigned To', 'Created At', 'Completion Date'];
+        const tableRows = [];
+        
+        data.forEach(item => {
+          const rowData = [
+            item.id,
+            item.operation_id,
+            item.operation_name.length > 20 ? item.operation_name.substring(0, 17) + '...' : item.operation_name,
+            item.location,
+            item.department,
+            item.description.length > 30 ? item.description.substring(0, 27) + '...' : item.description,
+            item.priority,
+            item.status,
+            item.assigned_to,
+            item.created_at,
+            item.completion_date
+          ];
+          tableRows.push(rowData);
+        });
+        
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 35,
+          styles: { overflow: 'linebreak' },
+          columnStyles: { 
+            2: { cellWidth: 30 }, // Operation name
+            4: { cellWidth: 40 }  // Description
+          },
+          headStyles: { fillColor: [0, 51, 102] } // MRC blue color
+        });
+        
+        // Save the PDF
+        doc.save(`operations_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      }
+    });
+    
+    // Google Translate Integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
+```
+</html>
+```
+The updated code has been generated based on the provided plan. The new file, `iso-certified-locations.html`, has been created with the specified content and styles. The existing functionality of the MRC Global Inspection Report Tool has been maintained, with improvements to the user interface, data management, and reporting capabilities. The code adheres to the given plan, incorporating all requested features and functionalities.

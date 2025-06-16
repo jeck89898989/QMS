@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global Safety Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f7fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #003366;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .home-link, .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .home-link i, .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .home-link:hover, .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .csv-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-container input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #003366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background-color: #004c99;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable th, 
+    table.dataTable td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+    }
+
+    table.dataTable thead th {
+      background-color: #f2f2f2;
+      border-bottom: 2px solid #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dataTables_wrapper .dataTables_length, 
+    .dataTables_wrapper .dataTables_filter, 
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_paginate {
+      margin-bottom: 10px;
+    }
+
+    .status-open {
+      background-color: #ffeeba;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    .status-in-progress {
+      background-color: #b8daff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #004085;
+    }
+
+    .status-closed {
+      background-color: #c3e6cb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .risk-high {
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .risk-medium {
+      color: #856404;
+    }
+
+    .risk-low {
+      color: #155724;
+    }
+
+    .export-options {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sample-data {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .sample-data h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .sample-data pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    .help-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Google Translate */
+    #google_translate_element {
+      margin-left: 15px;
+    }
+    
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    
+    body {
+        top: 0px !important; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="mrc_logo.png" alt="MRC Global Logo" class="logo">
+      <div class="header-text">
+        <h1>Safety Management</h1>
+        <p class="subtitle">Incident Reporting and Hazard Management</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="home-link"><i class="fas fa-home"></i> Home</a>
+        <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> Help</a>
+        <div id="google_translate_element"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <h2>Safety Incidents and Hazards</h2>
+      <p>Upload, manage, and track safety incidents, near-misses, and hazards. The system allows monitoring from identification through resolution.</p>
+      
+      <div id="alertBox" class="alert" style="display: none;"></div>
+      
+      <div class="csv-controls">
+        <div class="control-group">
+          <label for="csvFile">Import Safety Data (CSV)</label>
+          <div class="file-input-container">
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="importBtn" class="btn btn-primary"><i class="fas fa-file-import"></i> Import Data</button>
+            <button id="clearBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Data</button>
+          </div>
+          <p class="help-text">Select a CSV file containing safety incident and hazard records to import</p>
+        </div>
+        
+        <button id="addNewBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Record</button>
+      </div>
+      
+      <div class="sample-data">
+        <h3>Sample CSV Format</h3>
+        <p>Your CSV file should follow this structure (header row required):</p>
+        <pre>id,date_reported,location,department,incident_type,description,risk_level,status,reported_by,assigned_to,corrective_action,completion_date,injury_severity,investigation_notes
+1,2023-11-05,"Main Warehouse","Operations","Near Miss","Employee nearly slipped on unmarked wet floor",Medium,Closed,"John Smith","Maria Garcia","Installed wet floor signs and implemented regular floor inspection protocol",2023-11-10,"None","Floor cleaning procedure updated to include proper signage"
+2,2023-11-12,"Workshop Area","Production","Hazard","Exposed electrical wiring near workstation",High,In Progress,"Sarah Jones","Eric Chen","Scheduled electrician for repair and temporary barriers installed",,"Potential","Investigation revealed degraded conduit from chemical exposure"
+3,2023-11-18,"Loading Dock","Logistics","Incident","Worker strained back while lifting heavy equipment",Medium,Open,"Robert Taylor","Pending assignment","",,"Minor","Initial assessment indicates improper lifting technique"</pre>
+      </div>
+      
+      <div class="table-container">
+        <table id="safetyTable" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date Reported</th>
+              <th>Location</th>
+              <th>Incident Type</th>
+              <th>Description</th>
+              <th>Risk Level</th>
+              <th>Status</th>
+              <th>Reported By</th>
+              <th>Assigned To</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="export-options">
+        <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export to CSV</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      </div>
+    </div>
+    
+    <!-- Modal for viewing/editing incident details -->
+    <div id="incidentModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Safety Incident/Hazard Record</h2>
+        <form id="incidentForm">
+          <input type="hidden" id="incidentId">
+          
+          <div class="form-group">
+            <label for="dateReported">Date Reported</label>
+            <input type="date" id="dateReported" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="incidentType">Incident Type</label>
+            <select id="incidentType" required>
+              <option value="Incident">Incident</option>
+              <option value="Near Miss">Near Miss</option>
+              <option value="Hazard">Hazard</option>
+              <option value="Property Damage">Property Damage</option>
+              <option value="Environmental">Environmental</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="riskLevel">Risk Level</label>
+            <select id="riskLevel" required>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="reportedBy">Reported By</label>
+            <input type="text" id="reportedBy" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignedTo">Assigned To</label>
+            <input type="text" id="assignedTo">
+          </div>
+          
+          <div class="form-group">
+            <label for="injurySeverity">Injury Severity (if applicable)</label>
+            <select id="injurySeverity">
+              <option value="None">None</option>
+              <option value="Potential">Potential</option>
+              <option value="Minor">Minor</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Serious">Serious</option>
+              <option value="Fatal">Fatal</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="correctiveAction">Corrective Action</label>
+            <textarea id="correctiveAction" rows="3"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="completionDate">Completion Date</label>
+            <input type="date" id="completionDate">
+          </div>
+          
+          <div class="form-group">
+            <label for="investigationNotes">Investigation Notes</label>
+            <textarea id="investigationNotes" rows="3"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> MRC Global. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      let table = $('#safetyTable').DataTable({
+        columns: [
+          { data: 'id' },
+          { data: 'date_reported' },
+          { data: 'location' },
+          { data: 'incident_type' },
+          { data: 'description' },
+          { 
+            data: 'risk_level',
+            render: function(data) {
+              let className = '';
+              if (data === 'High') className = 'risk-high';
+              else if (data === 'Medium') className = 'risk-medium';
+              else if (data === 'Low') className = 'risk-low';
+              return `<span class="${className}">${data}</span>`;
+            }
+          },
+          { 
+            data: 'status',
+            render: function(data) {
+              return `<span class="status-${data.toLowerCase().replace(' ', '-')}">${data}</span>`;
+            }
+          },
+          { data: 'reported_by' },
+          { data: 'assigned_to' },
+          { 
+            data: null,
+            defaultContent: '<button class="btn-view"><i class="fas fa-eye"></i></button> <button class="btn-edit"><i class="fas fa-edit"></i></button> <button class="btn-delete"><i class="fas fa-trash"></i></button>',
+            orderable: false 
+          }
+        ]
+      });
+      
+      // Check for local storage data on load
+      loadFromLocalStorage();
+      
+      // Import CSV button click handler
+      $('#importBtn').click(function() {
+        const fileInput = $('#csvFile')[0];
+        if (fileInput.files.length === 0) {
+          showAlert('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const csv = e.target.result;
+          processCSV(csv);
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process CSV data
+      function processCSV(csv) {
+        const lines = csv.split('\n');
+        if (lines.length < 2) {
+          showAlert('The CSV file appears to be empty or invalid.', 'danger');
+          return;
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const expectedHeaders = ['id', 'date_reported', 'location', 'department', 'incident_type', 'description', 'risk_level', 'status', 'reported_by', 'assigned_to', 'corrective_action', 'completion_date', 'injury_severity', 'investigation_notes'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          showAlert(`CSV is missing required columns: ${missingHeaders.join(', ')}`, 'danger');
+          return;
+        }
+        
+        // Clear existing data
+        table.clear();
+        
+        // Process data rows
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim() === '') continue;
+          
+          // Handle quoted fields properly
+          let row = {};
+          try {
+            // This regex handles quoted fields that may contain commas
+            const pattern = /(".*?"|[^,"]*)(?=\s*,|\s*$)/g;
+            const lineMatch = [...lines[i].matchAll(pattern)].map(m => m[0]);
+            
+            if (lineMatch) {
+              headers.forEach((header, index) => {
+                if (index < lineMatch.length) {
+                  let value = lineMatch[index].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+                  row[header] = value;
+                } else {
+                  row[header] = '';
+                }
+              });
+              data.push(row);
+            }
+          } catch (error) {
+            console.error("Error parsing line:", lines[i], error);
+            continue;
+          }
+        }
+        
+        if (data.length === 0) {
+          showAlert('No valid data rows found in the CSV file.', 'danger');
+          return;
+        }
+        
+        // Add rows to table
+        table.rows.add(data).draw();
+        
+        // Save to local storage
+        saveToLocalStorage(data);
+        
+        showAlert(`Successfully imported ${data.length} safety records.`, 'success');
+        $('#csvFile').val('');
+      }
+      
+      // Clear data button click handler
+      $('#clearBtn').click(function() {
+        if (confirm('Are you sure you want to clear all safety records? This cannot be undone.')) {
+          table.clear().draw();
+          localStorage.removeItem('safetyData');
+          showAlert('All safety records have been cleared.', 'success');
+        }
+      });
+      
+      // Add new record button click handler
+      $('#addNewBtn').click(function() {
+        $('#modalTitle').text('Add New Safety Record');
+        $('#incidentForm')[0].reset();
+        $('#incidentId').val('');
+        $('#dateReported').val(new Date().toISOString().substr(0, 10)); // Set today's date
+        $('#incidentModal').css('display', 'block');
+      });
+      
+      // View record button click handler
+      $('#safetyTable').on('click', '.btn-view', function() {
+        const data = table.row($(this).parents('tr')).data();
+        viewRecord(data);
+      });
+      
+      // Edit record button click handler
+      $('#safetyTable').on('click', '.btn-edit', function() {
+        const data = table.row($(this).parents('tr')).data();
+        editRecord(data);
+      });
+      
+      // Delete record button click handler
+      $('#safetyTable').on('click', '.btn-delete', function() {
+        if (confirm('Are you sure you want to delete this record? This cannot be undone.')) {
+          const row = $(this).parents('tr');
+          const data = table.row(row).data();
+          
+          // Remove from table
+          table.row(row).remove().draw();
+          
+          // Update local storage
+          saveToLocalStorage(table.data().toArray());
+          
+          showAlert('Record has been deleted.', 'success');
+        }
+      });
+      
+      // Modal close button
+      $('.close, #cancelBtn').click(function() {
+        $('#incidentModal').css('display', 'none');
+      });
+      
+      // Close modal if clicking outside of it
+      $(window).click(function(event) {
+        if ($(event.target).is('#incidentModal')) {
+          $('#incidentModal').css('display', 'none');
+        }
+      });
+      
+      // Form submit handler
+      $('#incidentForm').submit(function(e) {
+        e.preventDefault();
+        saveRecord();
+      });
+      
+      // Export to CSV button
+      $('#exportCsvBtn').click(function() {
+        exportToCSV();
+      });
+      
+      // Export to PDF button
+      $('#exportPdfBtn').click(function() {
+        exportToPDF();
+      });
+      
+      // Functions
+      function viewRecord(data) {
+        $('#modalTitle').text('View Safety Record');
+        populateForm(data);
+        
+        // Disable all form fields for view mode
+        $('#incidentForm input, #incidentForm select, #incidentForm textarea').attr('disabled', true);
+        $('#saveBtn').hide();
+        
+        $('#incidentModal').css('display', 'block');
+      }
+      
+      function editRecord(data) {
+        $('#modalTitle').text('Edit Safety Record');
+        populateForm(data);
+        
+        // Enable all form fields for edit mode
+        $('#incidentForm input, #incidentForm select, #incidentForm textarea').attr('disabled', false);
+        $('#saveBtn').show();
+        
+        $('#incidentModal').css('display', 'block');
+      }
+      
+      function populateForm(data) {
+        $('#incidentId').val(data.id);
+        $('#dateReported').val(data.date_reported);
+        $('#location').val(data.location);
+        $('#department').val(data.department);
+        $('#incidentType').val(data.incident_type);
+        $('#description').val(data.description);
+        $('#riskLevel').val(data.risk_level);
+        $('#status').val(data.status);
+        $('#reportedBy').val(data.reported_by);
+        $('#assignedTo').val(data.assigned_to);
+        $('#injurySeverity').val(data.injury_severity);
+        $('#correctiveAction').val(data.corrective_action);
+        $('#completionDate').val(data.completion_date);
+        $('#investigationNotes').val(data.investigation_notes);
+      }
+      
+      function saveRecord() {
+        const formData = {
+          id: $('#incidentId').val() || generateId(),
+          date_reported: $('#dateReported').val(),
+          location: $('#location').val(),
+          department: $('#department').val(),
+          incident_type: $('#incidentType').val(),
+          description: $('#description').val(),
+          risk_level: $('#riskLevel').val(),
+          status: $('#status').val(),
+          reported_by: $('#reportedBy').val(),
+          assigned_to: $('#assignedTo').val(),
+          injury_severity: $('#injurySeverity').val(),
+          corrective_action: $('#correctiveAction').val(),
+          completion_date: $('#completionDate').val(),
+          investigation_notes: $('#investigationNotes').val()
+        };
+        
+        // Check if this is an update or new record
+        const existingData = table.data().toArray();
+        const existingIndex = existingData.findIndex(r => r.id === formData.id);
+        
+        if (existingIndex >= 0) {
+          // Update existing record
+          table.row(existingIndex).data(formData).draw();
+          showAlert('Record updated successfully.', 'success');
+        } else {
+          // Add new record
+          table.row.add(formData).draw();
+          showAlert('New record added successfully.', 'success');
+        }
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        // Close modal
+        $('#incidentModal').css('display', 'none');
+      }
+      
+      function generateId() {
+        const data = table.data().toArray();
+        if (data.length === 0) return '1';
+        
+        // Find the maximum ID and increment by 1
+        const maxId = Math.max(...data.map(r => parseInt(r.id) || 0));
+        return (maxId + 1).toString();
+      }
+      
+      function saveToLocalStorage(data) {
+        localStorage.setItem('safetyData', JSON.stringify(data));
+      }
+      
+      function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('safetyData');
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Array.isArray(data) && data.length > 0) {
+              table.clear();
+              table.rows.add(data).draw();
+              showAlert(`Loaded ${data.length} saved safety records.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error loading saved data:', e);
+          }
+        }
+      }
+      
+      function showAlert(message, type) {
+        const alertBox = $('#alertBox');
+        alertBox.text(message);
+        alertBox.removeClass('alert-success alert-danger');
+        alertBox.addClass(`alert-${type}`);
+        alertBox.show();
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          alertBox.fadeOut();
+        }, 5000);
+      }
+      
+      function exportToCSV() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // Get all headers
+        const headers = ['id', 'date_reported', 'location', 'department', 'incident_type', 'description', 'risk_level', 'status', 'reported_by', 'assigned_to', 'injury_severity', 'corrective_action', 'completion_date', 'investigation_notes'];
+        
+        // Create CSV content
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        
+        // Add headers
+        csvContent += headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = headers.map(header => {
+            let value = row[header] || '';
+            // Escape quotes and wrap in quotes if the value contains commas or quotes
+            if (value.includes('"') || value.includes(',')) {
+              value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+          });
+          csvContent += values.join(',') + '\n';
+        });
+        
+        // Create download link
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `safety_data_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        
+        // Trigger download
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+      }
+      
+      function exportToPDF() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // PDF initialization
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('MRC Global Safety Report', 14, 20);
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+        
+        // Prepare table data
+        const tableColumn = ['ID', 'Date', 'Location', 'Type', 'Description', 'Risk', 'Status', 'Reported By', 'Assigned To'];
+        const tableRows = [];
+        
+        data.forEach(item => {
+          const rowData = [
+            item.id,
+            item.date_reported,
+            item.location,
+            item.incident_type,
+            item.description.length > 30 ? item.description.substring(0, 27) + '...' : item.description,
+            item.risk_level,
+            item.status,
+            item.reported_by,
+            item.assigned_to
+          ];
+          tableRows.push(rowData);
+        });
+        
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 35,
+          styles: { overflow: 'linebreak' },
+          columnStyles: { 4: { cellWidth: 30 } }, // Make description column wider
+          headStyles: { fillColor: [0, 51, 102] } // MRC blue color
+        });
+        
+        // Save the PDF
+        doc.save(`safety_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      }
+    });
+    
+    // Google Translate Integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

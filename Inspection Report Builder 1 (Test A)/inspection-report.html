@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global Inspection Report</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Font Awesome for drag handles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* User guide link styling */
+    .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    @media print {
+      .user-guide-link {
+        display: none !important;
+      }
+    }
+
+    /* Added styles for Google Translate */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      margin-left: auto; /* Push actions to the right */
+    }
+
+    .header-actions > * {
+      margin-left: 15px; /* Space out action items */
+    }
+
+    /* Hide the default Google Translate top bar */
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    body {
+        top: 0px !important; 
+    }
+     /* Transposed Item Details table styles */
+    .item-details-transposed table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .item-details-transposed th, 
+    .item-details-transposed td {
+      padding: 5px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .item-details-transposed th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .item-details-transposed th:first-child {
+        width: 150px; /* Adjust width for the transposed header column */
+    }
+
+    .item-details-transposed input {
+        width: 100%;
+        padding: 3px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+
+    /* Hide action buttons in transposed table */
+    .item-details-transposed .action-cell,
+    .item-details-transposed .add-row-btn {
+        display: none !important;
+    }
+    
+    /* Collapsible Sections */
+    .form-section { position: relative; }
+    .form-section .section-header { cursor: pointer; }
+    .form-section .section-header::after {
+      content: '\25BC';
+      float: right;
+      font-size: 12px;
+      color: #003366;
+      transition: transform 0.3s ease;
+    }
+    .form-section.collapsed .section-header::after {
+      content: '\25B6';
+    }
+    .form-section.collapsed > :not(.section-header) {
+      display: none;
+    }
+
+    /* Context menu for expand/collapse */
+    .context-menu {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 10000;
+      border-radius: 4px;
+      min-width: 150px;
+    }
+    .context-menu-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .context-menu-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Top Bar Styles */
+    .top-bar {
+      background-color: #fff; /* Change background to white */
+      color: #000;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      padding: 10px 0;
+      border-bottom: 1px solid #003366; /* Add bottom border */
+    }
+    .top-bar .container {
+      display: flex;
+      align-items: center;
+    }
+    .top-bar .logo {
+      width: 60px;
+      height: auto;
+      margin-right: 15px;
+    }
+    .top-bar h1 {
+      margin: 0 auto;
+      font-size: 20px;
+      color: #000;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- New header bar with logo and title -->
+  <header class="top-bar">
+    <div class="container">
+      <img src="/a/989d6df8-ad26-4885-9432-988540444dac" alt="MRC Global Logo" class="logo">
+      <h1>MRC Global Inspection Report</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Existing header now only holds actions -->
+    <header>
+      <div class="header-content">
+        <!-- Navigation links and Actions -->
+        <div class="header-actions">
+          <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> User Guide</a>
+          <!-- Google Translate Placeholder -->
+          <div id="google_translate_element"></div>
+          <!-- Form Template selector -->
+          <div class="template-dropdown">
+            <label for="formTemplateSelect">Form Template:</label>
+            <select id="formTemplateSelect">
+              <option value="default" selected>Default</option>
+              <option value="new">Create New Form</option>
+            </select>
+            <button id="deleteTemplateBtn" type="button" class="btn btn-danger" style="display:none; margin-left:5px;">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button id="exportTemplateBtn" type="button" class="btn btn-secondary" style="margin-left:5px;">
+              <i class="fas fa-file-export"></i> Export Template
+            </button>
+            <button type="button" id="importTemplateBtn" class="btn btn-secondary" style="margin-left:5px;">
+              <i class="fas fa-file-import"></i> Import Template
+            </button>
+            <input type="file" id="importTemplateFile" accept=".json,.template.json" style="display:none;">
+          </div>
+          <!-- Moved Form Actions to header area -->
+          <div class="dropdown header-dropdown">
+            <button type="button" class="dropbtn"><i class="fas fa-cog"></i> Form Actions <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+              <button type="button" class="save-btn"><i class="fas fa-save"></i> Save Report</button>
+              <button type="button" class="load-btn"><i class="fas fa-folder-open"></i> Load Report</button>
+              <button type="button" class="save-file-btn"><i class="fas fa-file-download"></i> Save as File</button>
+              <button type="button" class="load-file-btn"><i class="fas fa-file-upload"></i> Load from File</button>
+              <button type="submit" class="print-btn"><i class="fas fa-print"></i> Print Report</button>
+              <button type="button" class="export-btn"><i class="fas fa-file-export"></i> Export to CSV</button>
+              <button type="button" class="save-html-btn"><i class="fas fa-file-code"></i> Save Form to HTML</button>
+              <button type="reset" class="reset-btn"><i class="fas fa-undo"></i> Reset Form</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Control Number Section - Added at the top of the form -->
+    <div class="form-section control-number-section non-draggable">
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="control-number">Control Number:</label>
+          <input type="text" id="control-number" name="control-number" readonly class="control-number-input">
+          <p class="control-number-format">Format: IR Report Number - Supplier - IR Revision - Year - DD.MM.YYYY</p>
+        </div>
+      </div>
+    </div>
+
+    <form id="inspection-report">
+      <!-- Basic Information Section - Condensed to 2 rows of 4 columns -->
+      <div class="form-section draggable" data-section-id="basic-info">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Basic Information</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ir-date">IR Issued Date</label>
+            <input type="date" id="ir-date" name="ir-date">
+          </div>
+          <div class="form-group">
+            <label for="reference-order">Reference Order/Project</label>
+            <input type="text" id="reference-order" name="reference-order">
+          </div>
+          <div class="form-group">
+            <label for="report-number">Report Number</label>
+            <input type="text" id="report-number" name="report-number">
+          </div>
+          <div class="form-group">
+            <label for="ir-revision">IR Revision</label>
+            <input type="text" id="ir-revision" name="ir-revision">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="manufacturer">Manufacturer</label>
+            <input type="text" id="manufacturer" name="manufacturer">
+          </div>
+          <div class="form-group">
+            <label for="supplier">Supplier/SubSupplier</label>
+            <input type="text" id="supplier" name="supplier">
+          </div>
+          <div class="form-group">
+            <label for="mrc-client">MRC Client</label>
+            <input type="text" id="mrc-client" name="mrc-client">
+          </div>
+          <div class="form-group">
+            <label for="supplier-job-no">Supplier Job No.</label>
+            <input type="text" id="supplier-job-no" name="supplier-job-no">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information - Combined with Inspection Type -->
+      <div class="form-section draggable" data-section-id="contact-info">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Contact Information</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-person">Contact Person</label>
+            <input type="text" id="contact-person" name="contact-person">
+          </div>
+          <div class="form-group">
+            <label for="inspection-location">Inspection Location</label>
+            <input type="text" id="inspection-location" name="inspection-location">
+          </div>
+          <div class="form-group">
+            <label for="tel-no">Tel No.</label>
+            <input type="tel" id="tel-no" name="tel-no">
+          </div>
+        </div>
+        
+        <!-- Inspection Type - Now part of contact section to save space -->
+        <div class="form-row inspection-type-row">
+          <div class="form-group">
+            <label>Type of Inspection</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="interim" name="inspection-type" value="interim">
+                <label for="interim">Interim</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="final" name="inspection-type" value="final">
+                <label for="final">Final</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="other-inspection" name="inspection-type" value="other">
+                <label for="other-inspection">Other</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Result of Inspection</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="accepted" name="inspection-result" value="accepted">
+                <label for="accepted">Accepted</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="hold" name="inspection-result" value="hold">
+                <label for="hold">Hold</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="rejected" name="inspection-result" value="rejected">
+                <label for="rejected">Rejected</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="other-result" name="inspection-result" value="other">
+                <label for="other-result">Other</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Order Status</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="whole" name="order-status" value="whole">
+                <label for="whole">Whole</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="part" name="order-status" value="part">
+                <label for="part">Part</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="balance" name="order-status" value="balance">
+                <label for="balance">Balance</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Information Section - More compact grid layout -->
+      <div class="form-section draggable" data-section-id="order-info">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Order Information</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mrc-po-no">MRC P.O No(s).</label>
+            <textarea id="mrc-po-no" name="mrc-po-no" rows="3" placeholder="Enter MRC PO numbers (one per line)"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="project-no">Project No./Title</label>
+            <input type="text" id="project-no" name="project-no">
+          </div>
+          <div class="form-group">
+            <label for="mrc-client-order">MRC Client Order No.</label>
+            <input type="text" id="mrc-client-order" name="mrc-client-order">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Surveillance points</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="h-point" name="surveillance-points" value="h">
+                <label for="h-point">H</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="w-point" name="surveillance-points" value="w">
+                <label for="w-point">W</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="r-point" name="surveillance-points" value="r">
+                <label for="r-point">R</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="m-point" name="surveillance-points" value="m">
+                <label for="m-point">M</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="other-point" name="surveillance-points" value="other">
+                <label for="other-point">Other</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Report Type</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="daily" name="report-type" value="daily">
+                <label for="daily">Daily</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="weekly" name="report-type" value="weekly">
+                <label for="weekly">Weekly</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="other-report" name="report-type" value="other">
+                <label for="other-report">Other</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="supplier-delivery-date">Supplier Contractual Delivery Date</label>
+            <input type="date" id="supplier-delivery-date" name="supplier-delivery-date">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inspector-name">Inspector Name and Surname</label>
+            <input type="text" id="inspector-name" name="inspector-name">
+          </div>
+          <div class="form-group">
+            <label for="mrc-eur-stamp">MRC EUR stamp no.</label>
+            <input type="text" id="mrc-eur-stamp" name="mrc-eur-stamp">
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Breakdown Section -->
+      <div class="form-section draggable" data-section-id="time-breakdown">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Time Breakdown</h3>
+        </div>
+        <table class="time-breakdown">
+          <thead>
+            <tr>
+              <th></th>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>TH</th>
+              <th>F</th>
+              <th>Partial Total</th>
+              <th>Weekly Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Inspection Time</td>
+              <td><input type="text" name="inspection-m"></td>
+              <td><input type="text" name="inspection-t"></td>
+              <td><input type="text" name="inspection-w"></td>
+              <td><input type="text" name="inspection-th"></td>
+              <td><input type="text" name="inspection-f"></td>
+              <td><input type="text" name="inspection-partial" readonly></td>
+              <td rowspan="4"><input type="text" name="weekly-total" readonly></td>
+            </tr>
+            <tr>
+              <td>Reporting Time</td>
+              <td><input type="text" name="reporting-m"></td>
+              <td><input type="text" name="reporting-t"></td>
+              <td><input type="text" name="reporting-w"></td>
+              <td><input type="text" name="reporting-th"></td>
+              <td><input type="text" name="reporting-f"></td>
+              <td><input type="text" name="reporting-partial" readonly></td>
+            </tr>
+            <tr>
+              <td>Travel Time</td>
+              <td><input type="text" name="travel-m"></td>
+              <td><input type="text" name="travel-t"></td>
+              <td><input type="text" name="travel-w"></td>
+              <td><input type="text" name="travel-th"></td>
+              <td><input type="text" name="travel-f"></td>
+              <td><input type="text" name="travel-partial" readonly></td>
+            </tr>
+            <tr>
+              <td>Travel Km</td>
+              <td><input type="text" name="km-m"></td>
+              <td><input type="text" name="km-t"></td>
+              <td><input type="text" name="km-w"></td>
+              <td><input type="text" name="km-th"></td>
+              <td><input type="text" name="km-f"></td>
+              <td><input type="text" name="km-total" readonly></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Contact Information Table - Made more compact -->
+      <div class="form-section draggable" data-section-id="contact-table">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Contact Information Table</h3>
+        </div>
+        <table class="contact-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Affiliation</th>
+              <th>Position</th>
+              <th>Tel.</th>
+              <th>e-mail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" name="contact-name-1"></td>
+              <td><input type="text" name="contact-affiliation-1"></td>
+              <td><input type="text" name="contact-position-1"></td>
+              <td><input type="text" name="contact-tel-1"></td>
+              <td><input type="text" name="contact-email-1"></td>
+            </tr>
+            <tr>
+              <td><input type="text" name="contact-name-2"></td>
+              <td><input type="text" name="contact-affiliation-2"></td>
+              <td><input type="text" name="contact-position-2"></td>
+              <td><input type="text" name="contact-tel-2"></td>
+              <td><input type="text" name="contact-email-2"></td>
+            </tr>
+            <tr>
+              <td><input type="text" name="contact-name-3"></td>
+              <td><input type="text" name="contact-affiliation-3"></td>
+              <td><input type="text" name="contact-position-3"></td>
+              <td><input type="text" name="contact-tel-3"></td>
+              <td><input type="text" name="contact-email-3"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Purpose and Summary Section - Made more compact -->
+      <div class="form-section draggable" data-section-id="purpose-summary">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Purpose and Summary</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="purpose">PURPOSE OF VISIT:</label>
+            <textarea id="purpose" name="purpose" rows="2" placeholder="Describe the scope of visit, refer to PO numbers, type of material and inspection type (ITP step)"></textarea>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="summary">SUMMARY:</label>
+            <textarea id="summary" name="summary" rows="2" placeholder="Give inspection results in summary."></textarea>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="hse-feedback">HSE FEEDBACK FROM THE VENDOR:</label>
+            <textarea id="hse-feedback" name="hse-feedback" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Notes Section -->
+      <div class="form-section draggable" data-section-id="additional-notes">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>ADDITIONAL NOTES & COMMENTS</h3>
+        </div>
+        <div class="form-group full-width">
+          <textarea id="additional-notes" name="additional-notes" rows="4" class="large-text-area" placeholder="Enter any additional notes, observations, or detailed comments about the inspection..."></textarea>
+        </div>
+      </div>
+
+      <!-- Inspection Results Section -->
+      <div class="form-section draggable" data-section-id="inspection-results">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>PARAGRAPH I- RESULTS OF INSPECTION</h3>
+        </div>
+        <div class="form-group full-width">
+          <textarea id="inspection-results-overview" name="inspection-results-overview" rows="3" class="large-text-area" placeholder="Enter general observations and summary of inspection results..."></textarea>
+        </div>
+        
+        <table class="inspection-results">
+          <thead>
+            <tr>
+              <th>Tick x</th>
+              <th>Description</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" name="check-1"></td>
+              <td>Valve nominal size conforming</td>
+              <td><textarea name="note-1" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-2"></td>
+              <td>Space between valve flange & body, sufficient for nuts of the pipeline flange</td>
+              <td><textarea name="note-2" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-3"></td>
+              <td>Design Spec/Pressure rating conforming</td>
+              <td><textarea name="note-3" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-4"></td>
+              <td>Face to face conforming</td>
+              <td><textarea name="note-4" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-5"></td>
+              <td>Welded bonnet</td>
+              <td><textarea name="note-5" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-6"></td>
+              <td>Bolted bonnet</td>
+              <td><textarea name="note-6" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-7"></td>
+              <td>Top entry ball valve</td>
+              <td><textarea name="note-7" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-8"></td>
+              <td>Side entry ball valve</td>
+              <td><textarea name="note-8" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-9"></td>
+              <td>2-piece ball valve</td>
+              <td><textarea name="note-9" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-10"></td>
+              <td>3-piece ball valve</td>
+              <td><textarea name="note-10" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-11"></td>
+              <td>Cast (cast parts surface visual check)</td>
+              <td><textarea name="note-11" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-12"></td>
+              <td>Forged body (forged parts surface visual check)</td>
+              <td><textarea name="note-12" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-13"></td>
+              <td>Bore type and size(s) conforming</td>
+              <td><textarea name="note-13" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-14"></td>
+              <td>Closure member type(s) conforming</td>
+              <td><textarea name="note-14" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-15"></td>
+              <td>Quantities conforming with notification/PO</td>
+              <td><textarea name="note-15" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-16"></td>
+              <td>Lack of sharp edges (2° roundness on the machined edges)</td>
+              <td><textarea name="note-16" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-17"></td>
+              <td>On unpainted material – general condition of the surfaces</td>
+              <td><textarea name="note-17" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-18"></td>
+              <td>On unpainted material - marking of the heat code(s) and material type</td>
+              <td><textarea name="note-18" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-19"></td>
+              <td>On unpainted material - marking of the size and rating</td>
+              <td><textarea name="note-19" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-20"></td>
+              <td>On painted material final colour</td>
+              <td><textarea name="note-20" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-21"></td>
+              <td>On painted material DFT</td>
+              <td><textarea name="note-21" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-22"></td>
+              <td>Wedge surface condition where visible</td>
+              <td><textarea name="note-22" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-23"></td>
+              <td>For ball valves – bore seats/ball alignment</td>
+              <td><textarea name="note-23" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-24"></td>
+              <td>Valve operator in conformity with requirements</td>
+              <td><textarea name="note-24" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-25"></td>
+              <td>Nameplate</td>
+              <td><textarea name="note-25" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-26"></td>
+              <td>Tag and/or VDS number</td>
+              <td><textarea name="note-26" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-27"></td>
+              <td>Additional nameplate (i.e. for VDS valves Low Temp. or Special Service)</td>
+              <td><textarea name="note-27" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-28"></td>
+              <td>Manual Valves under 2" operate open-close during final inspection</td>
+              <td><textarea name="note-28" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-29"></td>
+              <td>CE in place and conforming</td>
+              <td><textarea name="note-29" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-30"></td>
+              <td>UKCA marking</td>
+              <td><textarea name="note-30" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-31"></td>
+              <td>Atex marking</td>
+              <td><textarea name="note-31" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-32"></td>
+              <td>Valve ends type as per requirements</td>
+              <td><textarea name="note-32" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-33"></td>
+              <td>Valve ends condition with no damage, rust, scratches</td>
+              <td><textarea name="note-33" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-34"></td>
+              <td>Valve/valve unpainted parts protected against corrosion</td>
+              <td><textarea name="note-34" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-35"></td>
+              <td>Valve ends cups/protections appropriate type and size in all openings</td>
+              <td><textarea name="note-35" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-36"></td>
+              <td>Valve bolts/nuts material marked and conforming</td>
+              <td><textarea name="note-36" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-37"></td>
+              <td>Wooden case lined with waterproof paper on top and sides</td>
+              <td><textarea name="note-37" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-38"></td>
+              <td>Wooden case made of fumigated wood, certificate number visible</td>
+              <td><textarea name="note-38" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-39"></td>
+              <td>Welds/seal welds with no spatter, concerning irregularities</td>
+              <td><textarea name="note-39" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="check-40"></td>
+              <td>Welded components material marked on and in line with body/BOM material</td>
+              <td><textarea name="note-40" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Item Details Section - TRANSPOSED -->
+      <div class="form-section draggable item-details-transposed" data-section-id="item-details">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+          <label for="itemCountInput" style="font-size:14px; color:#003366; margin-right:8px;">Number of Items:</label>
+          <input type="number" id="itemCountInput" class="item-count-input" min="1" max="5" value="1"
+                 style="width:60px; padding:4px; border:1px solid #ddd; border-radius:4px;">
+        </div>
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Item Details</h3>
+        </div>
+        <div style="text-align: right; margin-bottom: 8px;">
+          <button type="button" id="cloneItemDetailsBtn" class="btn btn-secondary"><i class="fas fa-clone"></i> Clone Item Details Section</button>
+        </div>
+        <table class="item-details-transposed">
+          <thead>
+            <tr>
+              <th></th> <!-- Empty cell for transposed headers -->
+              <th>Item 1</th>
+              <th>Item 2</th>
+              <th>Item 3</th>
+              <th>Item 4</th>
+              <th>Item 5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>PO N°</th>
+              <td><input type="text" name="item-po-1"></td>
+              <td><input type="text" name="item-po-2"></td>
+              <td><input type="text" name="item-po-3"></td>
+              <td><input type="text" name="item-po-4"></td>
+              <td><input type="text" name="item-po-5"></td>
+            </tr>
+            <tr>
+              <th>Supplier job</th>
+              <td><input type="text" name="item-supplier-job-1"></td>
+              <td><input type="text" name="item-supplier-job-2"></td>
+              <td><input type="text" name="item-supplier-job-3"></td>
+              <td><input type="text" name="item-supplier-job-4"></td>
+              <td><input type="text" name="item-supplier-job-5"></td>
+            </tr>
+            <tr>
+              <th>Item N°</th>
+              <td><input type="text" name="item-item-no-1"></td>
+              <td><input type="text" name="item-item-no-2"></td>
+              <td><input type="text" name="item-item-no-3"></td>
+              <td><input type="text" name="item-item-no-4"></td>
+              <td><input type="text" name="item-item-no-5"></td>
+            </tr>
+            <tr>
+              <th>MESC/TAG</th>
+              <td><input type="text" name="item-mesc-tag-1"></td>
+              <td><input type="text" name="item-mesc-tag-2"></td>
+              <td><input type="text" name="item-mesc-tag-3"></td>
+              <td><input type="text" name="item-mesc-tag-4"></td>
+              <td><input type="text" name="item-mesc-tag-5"></td>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <td><textarea name="item-description-1" rows="3" placeholder="Size, description, material, class..."></textarea></td>
+              <td><textarea name="item-description-2" rows="3"></textarea></td>
+              <td><textarea name="item-description-3" rows="3"></textarea></td>
+              <td><textarea name="item-description-4" rows="3"></textarea></td>
+              <td><textarea name="item-description-5" rows="3"></textarea></td>
+            </tr>
+            <tr>
+              <th>Order Q.ty</th>
+              <td><input type="text" name="item-order-qty-1"></td>
+              <td><input type="text" name="item-order-qty-2"></td>
+              <td><input type="text" name="item-order-qty-3"></td>
+              <td><input type="text" name="item-order-qty-4"></td>
+              <td><input type="text" name="item-order-qty-5"></td>
+            </tr>
+            <tr>
+              <th>Inspt. Q.ty</th>
+              <td><input type="text" name="item-insp-qty-1"></td>
+              <td><input type="text" name="item-insp-qty-2"></td>
+              <td><input type="text" name="item-insp-qty-3"></td>
+              <td><input type="text" name="item-insp-qty-4"></td>
+              <td><input type="text" name="item-insp-qty-5"></td>
+            </tr>
+            <tr>
+              <th>Heat N°/Code N°</th>
+              <td><input type="text" name="item-heat-no-1" placeholder="Body/Bonnet/Closure"></td>
+              <td><input type="text" name="item-heat-no-2"></td>
+              <td><input type="text" name="item-heat-no-3"></td>
+              <td><input type="text" name="item-heat-no-4"></td>
+              <td><input type="text" name="item-heat-no-5"></td>
+            </tr>
+            <tr>
+              <th>Date</th>
+              <td><input type="date" name="item-date-1"></td>
+              <td><input type="date" name="item-date-2"></td>
+              <td><input type="date" name="item-date-3"></td>
+              <td><input type="date" name="item-date-4"></td>
+              <td><input type="date" name="item-date-5"></td>
+            </tr>
+            <tr>
+              <th>Manufacturer</th>
+              <td><input type="text" name="item-manufacturer-1"></td>
+              <td><input type="text" name="item-manufacturer-2"></td>
+              <td><input type="text" name="item-manufacturer-3"></td>
+              <td><input type="text" name="item-manufacturer-4"></td>
+              <td><input type="text" name="item-manufacturer-5"></td>
+            </tr>
+            <tr>
+              <th>Facility</th>
+              <td><input type="text" name="item-facility-1"></td>
+              <td><input type="text" name="item-facility-2"></td>
+              <td><input type="text" name="item-facility-3"></td>
+              <td><input type="text" name="item-facility-4"></td>
+              <td><input type="text" name="item-facility-5"></td>
+            </tr>
+            <tr>
+              <th>Service Center</th>
+              <td><input type="text" name="item-service-center-1"></td>
+              <td><input type="text" name="item-service-center-2"></td>
+              <td><input type="text" name="item-service-center-3"></td>
+              <td><input type="text" name="item-service-center-4"></td>
+              <td><input type="text" name="item-service-center-5"></td>
+            </tr>
+            <tr>
+              <th>Inspector</th>
+              <td><input type="text" name="item-inspector-1"></td>
+              <td><input type="text" name="item-inspector-2"></td>
+              <td><input type="text" name="item-inspector-3"></td>
+              <td><input type="text" name="item-inspector-4"></td>
+              <td><input type="text" name="item-inspector-5"></td>
+            </tr>
+            <tr>
+              <th># Received</th>
+              <td><input type="number" name="item-received-1"></td>
+              <td><input type="number" name="item-received-2"></td>
+              <td><input type="number" name="item-received-3"></td>
+              <td><input type="number" name="item-received-4"></td>
+              <td><input type="number" name="item-received-5"></td>
+            </tr>
+            <tr>
+              <th># Pass</th>
+              <td><input type="number" name="item-pass-1"></td>
+              <td><input type="number" name="item-pass-2"></td>
+              <td><input type="number" name="item-pass-3"></td>
+              <td><input type="number" name="item-pass-4"></td>
+              <td><input type="number" name="item-pass-5"></td>
+            </tr>
+            <tr>
+              <th># Fail</th>
+              <td><input type="number" name="item-fail-1"></td>
+              <td><input type="number" name="item-fail-2"></td>
+              <td><input type="number" name="item-fail-3"></td>
+              <td><input type="number" name="item-fail-4"></td>
+              <td><input type="number" name="item-fail-5"></td>
+            </tr>
+            <tr>
+              <th>Defect Description</th>
+              <td><textarea name="item-defect-description-1" rows="2" class="large-text-area"></textarea></td>
+              <td><textarea name="item-defect-description-2" rows="2" class="large-text-area"></textarea></td>
+              <td><textarea name="item-defect-description-3" rows="2" class="large-text-area"></textarea></td>
+              <td><textarea name="item-defect-description-4" rows="2" class="large-text-area"></textarea></td>
+              <td><textarea name="item-defect-description-5" rows="2" class="large-text-area"></textarea></td>
+            </tr>
+            <tr>
+              <th>NCR#</th>
+              <td><input type="text" name="item-ncr-1"></td>
+              <td><input type="text" name="item-ncr-2"></td>
+              <td><input type="text" name="item-ncr-3"></td>
+              <td><input type="text" name="item-ncr-4"></td>
+              <td><input type="text" name="item-ncr-5"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Valves Inspection Section - More compact -->
+      <div class="form-section draggable" data-section-id="valves-inspection">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Valves Inspection</h3>
+        </div>
+        <table class="valves-inspection">
+          <thead>
+            <tr>
+              <th colspan="2">Valves</th>
+              <th>Pass</th>
+              <th>Fail</th>
+              <th>N/A</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- General Checks -->
+            <tr class="category-row">
+              <td colspan="6">General Checks</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Quantity</td>
+              <td><input type="radio" name="quantity" value="pass"></td>
+              <td><input type="radio" name="quantity" value="fail"></td>
+              <td><input type="radio" name="quantity" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Valve Size Correct</td>
+              <td><input type="radio" name="valve-size" value="pass"></td>
+              <td><input type="radio" name="valve-size" value="fail"></td>
+              <td><input type="radio" name="valve-size" value="na"></td>
+              <td>MESC / MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Valve Class Correct</td>
+              <td><input type="radio" name="valve-class" value="pass"></td>
+              <td><input type="radio" name="valve-class" value="fail"></td>
+              <td><input type="radio" name="valve-class" value="na"></td>
+              <td>MESC / MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Valve Type Correct</td>
+              <td><input type="radio" name="valve-type" value="pass"></td>
+              <td><input type="radio" name="valve-type" value="fail"></td>
+              <td><input type="radio" name="valve-type" value="na"></td>
+              <td>MESC / MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>MESC Number Correct</td>
+              <td><input type="radio" name="mesc-number" value="pass"></td>
+              <td><input type="radio" name="mesc-number" value="fail"></td>
+              <td><input type="radio" name="mesc-number" value="na"></td>
+              <td>MESC / MRC PO</td>
+            </tr>
+
+            <!-- Name Plate -->
+            <tr class="category-row">
+              <td colspan="6">Name Plate</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Serial Number Matches Certs</td>
+              <td><input type="radio" name="serial-number" value="pass"></td>
+              <td><input type="radio" name="serial-number" value="fail"></td>
+              <td><input type="radio" name="serial-number" value="na"></td>
+              <td>Certs comparison</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>CE Marking for valves >1"</td>
+              <td><input type="radio" name="ce-marking" value="pass"></td>
+              <td><input type="radio" name="ce-marking" value="fail"></td>
+              <td><input type="radio" name="ce-marking" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Part Number Correct</td>
+              <td><input type="radio" name="part-number" value="pass"></td>
+              <td><input type="radio" name="part-number" value="fail"></td>
+              <td><input type="radio" name="part-number" value="na"></td>
+              <td>MRC PO</td>
+            </!---->
+            <tr>
+              <td></td>
+              <td>Appropriately / Permanently Attached</td>
+              <td><input type="radio" name="permanently-attached" value="pass"></td>
+              <td><input type="radio" name="permanently-attached" value="fail"></td>
+              <td><input type="radio" name="permanently-attached" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+
+            <!-- Coating System -->
+            <tr class="category-row">
+              <td colspan="6">Coating System</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>System Correct (Materials and NDFT)</td>
+              <td><input type="radio" name="system-correct" value="pass"></td>
+              <td><input type="radio" name="system-correct" value="fail"></td>
+              <td><input type="radio" name="system-correct" value="na"></td>
+              <td>MRC PO / 77/310</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Colour Correct</td>
+              <td><input type="radio" name="colour-correct" value="pass"></td>
+              <td><input type="radio" name="colour-correct" value="fail"></td>
+              <td><input type="radio" name="colour-correct" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating Condition Acceptable</td>
+              <td><input type="radio" name="coating-condition" value="pass"></td>
+              <td><input type="radio" name="coating-condition" value="fail"></td>
+              <td><input type="radio" name="coating-condition" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+
+            <!-- Heat Codes -->
+            <tr class="category-row">
+              <td colspan="6">Heat Codes</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Heat Codes Visible on Pressure Retaining Parts</td>
+              <td><input type="radio" name="heat-codes-visible" value="pass"></td>
+              <td><input type="radio" name="heat-codes-visible" value="fail"></td>
+              <td><input type="radio" name="heat-codes-visible" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Heat Codes Match Certificates</td>
+              <td><input type="radio" name="heat-codes-match" value="pass"></td>
+              <td><input type="radio" name="heat-codes-match" value="fail"></td>
+              <td><input type="radio" name="heat-codes-match" value="na"></td>
+              <td>Certs comparison</td>
+            </tr>
+
+            <!-- Visual / Dimensions -->
+            <tr class="category-row">
+              <td colspan="6">Visual / Dimensions</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Face to Face</td>
+              <td><input type="radio" name="face-to-face" value="pass"></td>
+              <td><input type="radio" name="face-to-face" value="fail"></td>
+              <td><input type="radio" name="face-to-face" value="na"></td>
+              <td>B16.10</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Joint Type</td>
+              <td><input type="radio" name="joint-type" value="pass"></td>
+              <td><input type="radio" name="joint-type" value="fail"></td>
+              <td><input type="radio" name="joint-type" value="na"></td>
+              <td>MESC / MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Raised Face / RTJ Correct Diameter</td>
+              <td><input type="radio" name="raised-face" value="pass"></td>
+              <td><input type="radio" name="raised-face" value="fail"></td>
+              <td><input type="radio" name="raised-face" value="na"></td>
+              <td>MESC / MRC PO / Ring (R) gauges</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Surface Condition</td>
+              <td><input type="radio" name="surface-condition" value="pass"></td>
+              <td><input type="radio" name="surface-condition" value="fail"></td>
+              <td><input type="radio" name="surface-condition" value="na"></td>
+              <td>MSS SP-55 Permissible defects on RF B16.5</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Internal Cleanliness</td>
+              <td><input type="radio" name="internal-cleanliness" value="pass"></td>
+              <td><input type="radio" name="internal-cleanliness" value="fail"></td>
+              <td><input type="radio" name="internal-cleanliness" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Operational Check (if safe and possible)</td>
+              <td><input type="radio" name="operational-check" value="pass"></td>
+              <td><input type="radio" name="operational-check" value="fail"></td>
+              <td><input type="radio" name="operational-check" value="na"></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Number of Bolt Holes</td>
+              <td><input type="radio" name="bolt-holes-number" value="pass"></td>
+              <td><input type="radio" name="bolt-holes-number" value="fail"></td>
+              <td><input type="radio" name="bolt-holes-number" value="na"></td>
+              <td>B16.5 Flanged fittings</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolt Hole Diameter</td>
+              <td><input type="radio" name="bolt-hole-diameter" value="pass"></td>
+              <td><input type="radio" name="bolt-hole-diameter" value="fail"></td>
+              <td><input type="radio" name="bolt-hole-diameter" value="na"></td>
+              <td>B16.5 Flanged fittings</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolt Hole PCD</td>
+              <td><input type="radio" name="bolt-hole-pcd" value="pass"></td>
+              <td><input type="radio" name="bolt-hole-pcd" value="fail"></td>
+              <td><input type="radio" name="bolt-hole-pcd" value="na"></td>
+              <td>B16.5 Flanged fittings</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolt Hole Alignment (end to end / 2 or 3 piece valves)</td>
+              <td><input type="radio" name="bolt-hole-alignment" value="pass"></td>
+              <td><input type="radio" name="bolt-hole-alignment" value="fail"></td>
+              <td><input type="radio" name="bolt-hole-alignment" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Flange Diameter</td>
+              <td><input type="radio" name="flange-diameter" value="pass"></td>
+              <td><input type="radio" name="flange-diameter" value="fail"></td>
+              <td><input type="radio" name="flange-diameter" value="na"></td>
+              <td>B16.5 Flanged fittings</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Flange Thickness</td>
+              <td><input type="radio" name="flange-thickness" value="pass"></td>
+              <td><input type="radio" name="flange-thickness" value="fail"></td>
+              <td><input type="radio" name="flange-thickness" value="na"></td>
+              <td>B16.5 Flanged fittings</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolt Markings</td>
+              <td><input type="radio" name="bolt-markings" value="pass"></td>
+              <td><input type="radio" name="bolt-markings" value="fail"></td>
+              <td><input type="radio" name="bolt-markings" value="na"></td>
+              <td>MESC / Certs comparison</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Mounting Pad PCD / suitable for actuation</td>
+              <td><input type="radio" name="mounting-pad" value="pass"></td>
+              <td><input type="radio" name="mounting-pad" value="fail"></td>
+              <td><input type="radio" name="mounting-pad" value="na"></td>
+              <td>Validate against mating piece, or drawing</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Suitable Flange Protection Provided</td>
+              <td><input type="radio" name="flange-protection" value="pass"></td>
+              <td><input type="radio" name="flange-protection" value="fail"></td>
+              <td><input type="radio" name="flange-protection" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+
+            <!-- Documentation Checks -->
+            <tr class="category-row">
+              <td colspan="6">Documentation Checks</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>PED / CE Declaration of Conformity (2014/68/EU)</td>
+              <td><input type="radio" name="ped-ce-declaration" value="pass"></td>
+              <td><input type="radio" name="ped-ce-declaration" value="fail"></td>
+              <td><input type="radio" name="ped-ce-declaration" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>FET Certificate (77/312 or 77/200)</td>
+              <td><input type="radio" name="fet-certificate" value="pass"></td>
+              <td><input type="radio" name="fet-certificate" value="fail"></td>
+              <td><input type="radio" name="fet-certificate" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>EN 10204 3.1</td>
+              <td><input type="radio" name="charpy-testing" value="pass"></td>
+              <td><input type="radio" name="charpy-testing" value="fail"></td>
+              <td><input type="radio" name="charpy-testing" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Material Certification (3.1 etc.)</td>
+              <td><input type="radio" name="material-certification" value="pass"></td>
+              <td><input type="radio" name="material-certification" value="fail"></td>
+              <td><input type="radio" name="material-certification" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Hydrostatic Test (Extended Duration)</td>
+              <td><input type="radio" name="hydrostatic-test" value="pass"></td>
+              <td><input type="radio" name="hydrostatic-test" value="fail"></td>
+              <td><input type="radio" name="hydrostatic-test" value="na"></td>
+              <td>Traceable document + Duration of test</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Corrosion Test on Stainless/Duplex</td>
+              <td><input type="radio" name="corrosion-test" value="pass"></td>
+              <td><input type="radio" name="corrosion-test" value="fail"></td>
+              <td><input type="radio" name="corrosion-test" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Ferrite Content Certificate on Duplex</td>
+              <td><input type="radio" name="ferrite-content" value="pass"></td>
+              <td><input type="radio" name="ferrite-content" value="fail"></td>
+              <td><input type="radio" name="ferrite-content" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolting Corrosion Test for B8, B8M, BM82</td>
+              <td><input type="radio" name="bolting-corrosion" value="pass"></td>
+              <td><input type="radio" name="bolting-corrosion" value="fail"></td>
+              <td><input type="radio" name="bolting-corrosion" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>IOM present</td>
+              <td><input type="radio" name="iom-present" value="pass"></td>
+              <td><input type="radio" name="iom-present" value="fail"></td>
+              <td><input type="radio" name="iom-present" value="na"></td>
+              <td>Correct for valve type</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Certificate Quality (Legibility etc.)</td>
+              <td><input type="radio" name="certificate-quality" value="pass"></td>
+              <td><input type="radio" name="certificate-quality" value="fail"></td>
+              <td><input type="radio" name="certificate-quality" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Certificate Language (English required for 77-302 applicable orders)</td>
+              <td><input type="radio" name="certificate-language" value="pass"></td>
+              <td><input type="radio" name="certificate-language" value="fail"></td>
+              <td><input type="radio" name="certificate-language" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Actuators Inspection Section - Added as requested -->
+      <div class="form-section draggable" data-section-id="actuators-inspection">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Actuators Inspection</h3>
+        </div>
+        <table class="valves-inspection">
+          <thead>
+            <tr>
+              <th colspan="2">Actuators</th>
+              <th>Pass</th>
+              <th>Fail</th>
+              <th>N/A</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- General Checks -->
+            <tr class="category-row">
+              <td colspan="6">General Checks</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Quantity</td>
+              <td><input type="radio" name="actuator-quantity" value="pass"></td>
+              <td><input type="radio" name="actuator-quantity" value="fail"></td>
+              <td><input type="radio" name="actuator-quantity" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Model Number Correct</td>
+              <td><input type="radio" name="actuator-model" value="pass"></td>
+              <td><input type="radio" name="actuator-model" value="fail"></td>
+              <td><input type="radio" name="actuator-model" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Actuator Mounting Pad PCD / suitable for actuation</td>
+              <td><input type="radio" name="actuator-mounting-pad" value="pass"></td>
+              <td><input type="radio" name="actuator-mounting-pad" value="fail"></td>
+              <td><input type="radio" name="actuator-mounting-pad" value="na"></td>
+              <td>Validate against mating piece, or drawing</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>End to End Dimension</td>
+              <td><input type="radio" name="actuator-end-dimension" value="pass"></td>
+              <td><input type="radio" name="actuator-end-dimension" value="fail"></td>
+              <td><input type="radio" name="actuator-end-dimension" value="na"></td>
+              <td>Catalogue / GA drawing</td>
+            </tr>
+
+            <!-- Coating System -->
+            <tr class="category-row">
+              <td colspan="6">Coating System</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>System Correct (Materials and NDFT)</td>
+              <td><input type="radio" name="actuator-system-correct" value="pass"></td>
+              <td><input type="radio" name="actuator-system-correct" value="fail"></td>
+              <td><input type="radio" name="actuator-system-correct" value="na"></td>
+              <td>MRC PO / DEP</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Colour Correct</td>
+              <td><input type="radio" name="actuator-colour-correct" value="pass"></td>
+              <td><input type="radio" name="actuator-colour-correct" value="fail"></td>
+              <td><input type="radio" name="actuator-colour-correct" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating Condition Acceptable</td>
+              <td><input type="radio" name="actuator-coating-condition" value="pass"></td>
+              <td><input type="radio" name="actuator-coating-condition" value="fail"></td>
+              <td><input type="radio" name="actuator-coating-condition" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+
+            <!-- Documentation -->
+            <tr class="category-row">
+              <td colspan="6">Documentation</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Manufacturer Test Report</td>
+              <td><input type="radio" name="actuator-test-report" value="pass"></td>
+              <td><input type="radio" name="actuator-test-report" value="fail"></td>
+              <td><input type="radio" name="actuator-test-report" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Material Certification (3.1 etc.)</td>
+              <td><input type="radio" name="actuator-material-cert" value="pass"></td>
+              <td><input type="radio" name="actuator-material-cert" value="fail"></td>
+              <td><input type="radio" name="actuator-material-cert" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>CE Declaration of Conformity (2014/68/EU)</td>
+              <td><input type="radio" name="actuator-ce-declaration" value="pass"></td>
+              <td><input type="radio" name="actuator-ce-declaration" value="fail"></td>
+              <td><input type="radio" name="actuator-ce-declaration" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>NDE Certificates (Protective Application)</td>
+              <td><input type="radio" name="actuator-nde-certificates" value="pass"></td>
+              <td><input type="radio" name="actuator-nde-certificates" value="fail"></td>
+              <td><input type="radio" name="actuator-nde-certificates" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating Certificate</td>
+              <td><input type="radio" name="actuator-coating-certificate" value="pass"></td>
+              <td><input type="radio" name="actuator-coating-certificate" value="fail"></td>
+              <td><input type="radio" name="actuator-coating-certificate" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Torque Test (Protective Application)</td>
+              <td><input type="radio" name="actuator-torque-test" value="pass"></td>
+              <td><input type="radio" name="actuator-torque-test" value="fail"></td>
+              <td><input type="radio" name="actuator-torque-test" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>IOM Manual</td>
+              <td><input type="radio" name="actuator-iom-manual" value="pass"></td>
+              <td><input type="radio" name="actuator-iom-manual" value="fail"></td>
+              <td><input type="radio" name="actuator-iom-manual" value="na"></td>
+              <td>Correct for actuator model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Ancillaries Inspection Section - Added as requested -->
+      <div class="form-section draggable" data-section-id="ancillaries-inspection">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Ancillaries Inspection</h3>
+        </div>
+        <table class="valves-inspection">
+          <thead>
+            <tr>
+              <th colspan="2">Ancillaries</th>
+              <th>Pass</th>
+              <th>Fail</th>
+              <th>N/A</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- General Checks -->
+            <tr class="category-row">
+              <td colspan="6">General Checks</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Quantity</td>
+              <td><input type="radio" name="ancillary-quantity" value="pass"></td>
+              <td><input type="radio" name="ancillary-quantity" value="fail"></td>
+              <td><input type="radio" name="ancillary-quantity" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Model Number Correct</td>
+              <td><input type="radio" name="ancillary-model" value="pass"></td>
+              <td><input type="radio" name="ancillary-model" value="fail"></td>
+              <td><input type="radio" name="ancillary-model" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Voltage (Solenoids)</td>
+              <td><input type="radio" name="ancillary-voltage" value="pass"></td>
+              <td><input type="radio" name="ancillary-voltage" value="fail"></td>
+              <td><input type="radio" name="ancillary-voltage" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Atex Haz Area Classification (Solenoids / Switchboxes)</td>
+              <td><input type="radio" name="ancillary-atex-class" value="pass"></td>
+              <td><input type="radio" name="ancillary-atex-class" value="fail"></td>
+              <td><input type="radio" name="ancillary-atex-class" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Set Pressure (Relief Valves)</td>
+              <td><input type="radio" name="ancillary-set-pressure" value="pass"></td>
+              <td><input type="radio" name="ancillary-set-pressure" value="fail"></td>
+              <td><input type="radio" name="ancillary-set-pressure" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+
+            <!-- Documentation -->
+            <tr class="category-row">
+              <td colspan="6">Documentation</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Manufacturer Test Report</td>
+              <td><input type="radio" name="ancillary-test-report" value="pass"></td>
+              <td><input type="radio" name="ancillary-test-report" value="fail"></td>
+              <td><input type="radio" name="ancillary-test-report" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Atex Haz Area Certificate (Solenoids / Switchboxes)</td>
+              <td><input type="radio" name="ancillary-atex-cert" value="pass"></td>
+              <td><input type="radio" name="ancillary-atex-cert" value="fail"></td>
+              <td><input type="radio" name="ancillary-atex-cert" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>CE Declaration of Conformity (2014/68/EU)</td>
+              <td><input type="radio" name="ancillary-ce-declaration" value="pass"></td>
+              <td><input type="radio" name="ancillary-ce-declaration" value="fail"></td>
+              <td><input type="radio" name="ancillary-ce-declaration" value="na"></td>
+              <td>Traceable document</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>IOM Manual</td>
+              <td><input type="radio" name="ancillary-iom-manual" value="pass"></td>
+              <td><input type="radio" name="ancillary-iom-manual" value="fail"></td>
+              <td><input type="radio" name="ancillary-iom-manual" value="na"></td>
+              <td>Correct for product model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Spools / Framework Inspection Section -->
+      <div class="form-section draggable" data-section-id="spools-inspection">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Spools / Framework Inspection</h3>
+        </div>
+        <table class="valves-inspection">
+          <thead>
+            <tr>
+              <th colspan="2">Spools / Framework</th>
+              <th>Pass</th>
+              <th>Fail</th>
+              <th>N/A</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- General Checks -->
+            <tr class="category-row">
+              <td colspan="6">General Checks</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Quantity</td>
+              <td><input type="radio" name="spool-quantity" value="pass"></td>
+              <td><input type="radio" name="spool-quantity" value="fail"></td>
+              <td><input type="radio" name="spool-quantity" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Bolting Clearance (Spool)</td>
+              <td><input type="radio" name="spool-bolting-clearance" value="pass"></td>
+              <td><input type="radio" name="spool-bolting-clearance" value="fail"></td>
+              <td><input type="radio" name="spool-bolting-clearance" value="na"></td>
+              <td>Visual</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Sufficient Fasteners Provided</td>
+              <td><input type="radio" name="spool-fasteners-provided" value="pass"></td>
+              <td><input type="radio" name="spool-fasteners-provided" value="fail"></td>
+              <td><input type="radio" name="spool-fasteners-provided" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Fastener Grades Correct</td>
+              <td><input type="radio" name="spool-fastener-grades" value="pass"></td>
+              <td><input type="radio" name="spool-fastener-grades" value="fail"></td>
+              <td><input type="radio" name="spool-fastener-grades" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Machining Details Correct</td>
+              <td><input type="radio" name="spool-machining-details" value="pass"></td>
+              <td><input type="radio" name="spool-machining-details" value="fail"></td>
+              <td><input type="radio" name="spool-machining-details" value="na"></td>
+              <td>Top works drawing (F14, F16 etc) / vs Product / ISO 5211</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating Condition Acceptable</td>
+              <td><input type="radio" name="spool-coating-condition" value="pass"></td>
+              <td><input type="radio" name="spool-coating-condition" value="fail"></td>
+              <td><input type="radio" name="spool-coating-condition" value="na"></td>
+              <td></td>
+            </tr>
+
+            <!-- Documentation -->
+            <tr class="category-row">
+              <td colspan="6">Documentation</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating System Correct (Materials and NDFT)</td>
+              <td><input type="radio" name="spool-coating-system" value="pass"></td>
+              <td><input type="radio" name="spool-coating-system" value="fail"></td>
+              <td><input type="radio" name="spool-coating-system" value="na"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Custom Inspection Section -->
+      <div class="form-section draggable" data-section-id="custom-inspection">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3 contenteditable="true">Custom Inspection</h3>
+        </div>
+        <div class="section-actions" style="margin-bottom:10px;">
+          <button type="button" id="addCustomCategoryBtn" class="btn btn-secondary"><i class="fas fa-plus"></i> Add Category</button>
+          <button type="button" id="addCustomRowBtn" class="btn btn-secondary"><i class="fas fa-plus-circle"></i> Add Subsection</button>
+          <button type="button" class="btn btn-secondary export-custom-csv-btn"><i class="fas fa-file-csv"></i> Export Custom Inspection to CSV</button>
+          <button type="button" id="importCustomCsvBtn" class="btn btn-secondary"><i class="fas fa-file-import"></i> Import Custom Inspection CSV</button>
+          <input type="file" id="importCustomCsvInput" accept=".csv" style="display:none;">
+        </div>
+        <table class="valves-inspection">
+          <thead>
+            <tr>
+              <th colspan="2" contenteditable="true">Custom Inspection</th>
+              <th>Pass</th>
+              <th>Fail</th>
+              <th>N/A</th>
+              <th>Guidance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td>Fastener Grades Correct</td>
+              <td><input type="radio" name="custom-fastener-grades" value="pass"></td>
+              <td><input type="radio" name="custom-fastener-grades" value="fail"></td>
+              <td><input type="radio" name="custom-fastener-grades" value="na"></td>
+              <td>MRC PO</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Machining Details Correct</td>
+              <td><input type="radio" name="custom-machining-details" value="pass"></td>
+              <td><input type="radio" name="custom-machining-details" value="fail"></td>
+              <td><input type="radio" name="custom-machining-details" value="na"></td>
+              <td>Top works drawing (F14, F16 etc) / vs Product / ISO 5211</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Coating Condition Acceptable</td>
+              <td><input type="radio" name="custom-coating-condition" value="pass"></td>
+              <td><input type="radio" name="custom-coating-condition" value="fail"></td>
+              <td><input type="radio" name="custom-coating-condition" value="na"></td>
+              <td>Visual only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Other Visual Inspection Notes Section -->
+      <div class="form-section draggable" data-section-id="visual-inspection-notes">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Other Visual Inspection Notes</h3>
+        </div>
+        <div class="visual-inspection-notes">
+          <div class="note-group">
+            <label for="visual-check">Visual Check</label>
+            <textarea id="visual-check" name="visual-check" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="marking-tagging">Marking and Tagging (Heat Numbers check and record)</label>
+            <textarea id="marking-tagging" name="marking-tagging" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="on-valve">On Valve</label>
+            <textarea id="on-valve" name="on-valve" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="main-nameplate">Main Nameplate</label>
+            <textarea id="main-nameplate" name="main-nameplate" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="additional-nameplates">Additional Nameplates (if applicable)</label>
+            <textarea id="additional-nameplates" name="additional-nameplates" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="hydrotest">Hydrotest and pneumatic test</label>
+            <textarea id="hydrotest" name="hydrotest" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="fugitive-emission">Fugitive Emission</label>
+            <textarea id="fugitive-emission" name="fugitive-emission" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="low-temperature">Low Temperature</label>
+            <textarea id="low-temperature" name="low-temperature" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="painting-coating">Painting/Coating</label>
+            <textarea id="painting-coating" name="painting-coating" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="preservation">Preservation (internal, external, openings)</label>
+            <textarea id="preservation" name="preservation" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="packing">Packing</label>
+            <textarea id="packing" name="packing" rows="2"></textarea>
+          </div>
+
+          <div class="note-group">
+            <label for="other-notes">Other</label>
+            <textarea id="other-notes" name="other-notes" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document References Section - stacked tables -->
+      <div class="form-section draggable" data-section-id="document-references">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Document References</h3>
+        </div>
+        <!-- first table -->
+        <div style="margin-bottom:20px;">
+          <table class="document-references">
+            <thead>
+              <tr>
+                <th style="width: 40px;">Select</th>
+                <th>Document N° / Date</th>
+                <th>Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" name="doc-select-1"></td>
+                <td><input type="text" name="doc-num-1" value="77-200 2020"></td>
+                <td><textarea name="doc-title-1" rows="2" class="large-text-area">Valves in Low Temperature and Cryogenic Services</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-2"></td>
+                <td><input type="text" name="doc-num-2" value="77-302 2020"></td>
+                <td><textarea name="doc-title-2" rows="2" class="large-text-area">Valves General Requirements</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-3"></td>
+                <td><input type="text" name="doc-num-3" value="77-303 2020"></td>
+                <td><textarea name="doc-title-3" rows="2" class="large-text-area">Valves in Special Service</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-4"></td>
+                <td><input type="text" name="doc-num-4" value="77-312 2020"></td>
+                <td><textarea name="doc-title-4" rows="2" class="large-text-area">Fugitive Emission Production Testing</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-5"></td>
+                <td><input type="text" name="doc-num-5" value="77-101 2020"></td>
+                <td><textarea name="doc-title-5" rows="2" class="large-text-area">Technical Spec Gate Globe and Check Valves</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-6"></td>
+                <td><input type="text" name="doc-num-6" value="77-110 2019"></td>
+                <td><textarea name="doc-title-6" rows="2" class="large-text-area">Technical Spec Ball Valves</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-7"></td>
+                <td><input type="text" name="doc-num-7" value="API 6D - 2021"></td>
+                <td><textarea name="doc-title-7" rows="2" class="large-text-area">Specification for Pipeline Valves</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-8"></td>
+                <td><input type="text" name="doc-num-8" value="API 6A - 2018"></td>
+                <td><textarea name="doc-title-8" rows="2" class="large-text-area">Specification for Wellhead and Tree Equipment</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-9"></td>
+                <td><input type="text" name="doc-num-9" value="API 602 - 2022"></td>
+                <td><textarea name="doc-title-9" rows="2" class="large-text-area">Gate, Globe & Check Valves Size DN100 (NPS 4) and smaller</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-10"></td>
+                <td><input type="text" name="doc-num-10" value="API 598 - 2023"></td>
+                <td><textarea name="doc-title-10" rows="2" class="large-text-area">Valve Inspection and Testing</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-template"></td>
+                <td><input type="text" name="doc-num-template" placeholder="Enter Document N° / Date"></td>
+                <td><textarea name="doc-title-template" rows="2" class="large-text-area" placeholder="Enter Title"></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- second table -->
+        <div style="margin-bottom:20px;">
+          <table class="document-references">
+            <thead>
+              <tr>
+                <th style="width: 40px;">Select</th>
+                <th>Document N° / Date</th>
+                <th>Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" name="doc-select-11"></td>
+                <td><input type="text" name="doc-num-11" value="API 607 - 2022"></td>
+                <td><textarea name="doc-title-11" rows="2" class="large-text-area">Fire Test for Quarter-turn Valves and Valves Non-metallic Seats</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-12"></td>
+                <td><input type="text" name="doc-num-12" value="PED 2014-68-UE"></td>
+                <td><textarea name="doc-title-12" rows="2" class="large-text-area">Pressure Equipment Directive UE</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-13"></td>
+                <td><input type="text" name="doc-num-13" value="NACE MR075"></td>
+                <td><textarea name="doc-title-13" rows="2" class="large-text-area">Materials for Valves for Resistance to Sulfide Stress Cracking</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-14"></td>
+                <td><input type="text" name="doc-num-14" value="EN ISO 15761"></td>
+                <td><textarea name="doc-title-14" rows="2" class="large-text-area">Steel Gate, Globe and Check Valves for Sizes DN 100 and Smaller</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-15"></td>
+                <td><input type="text" name="doc-num-15" value="EN ISO 17292"></td>
+                <td><textarea name="doc-title-15" rows="2" class="large-text-area">Metal Ball Valves for Petroleum, Petrochemical and Allied Industries</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-16"></td>
+                <td><input type="text" name="doc-num-16" value="EN ISO 5208"></td>
+                <td><textarea name="doc-title-16" rows="2" class="large-text-area">Industrial Valves - Pressure Testing of Metallic Valves</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-17"></td>
+                <td><input type="text" name="doc-num-17" value="IOGP S-563 12/2021"></td>
+                <td><textarea name="doc-title-17" rows="2" class="large-text-area">MDS</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-18"></td>
+                <td><input type="text" name="doc-num-18" value="ASME B 16.34"></td>
+                <td><textarea name="doc-title-18" rows="2" class="large-text-area">Valves-Flanged, Threaded and Welding End.</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-19"></td>
+                <td><input type="text" name="doc-num-19" value="ASME B 16.5"></td>
+                <td><textarea name="doc-title-19" rows="2" class="large-text-area">Pipe Flanges and Flanged Fittings ½" till 24".</textarea></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="doc-select-template-2"></td>
+                <td><input type="text" name="doc-num-template-2" placeholder="Enter Document N° / Date"></td>
+                <td><textarea name="doc-title-template-2" rows="2" class="large-text-area" placeholder="Enter Title"></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="text-align:right; margin-top:10px;">
+          <button type="button" class="btn btn-primary add-document-btn"><i class="fas fa-plus-circle"></i> Add Document</button>
+          <button type="button" id="deleteSelectedDocsBtn" class="btn btn-danger delete-selected-docs-btn" data-table-selector=".document-references"><i class="fas fa-trash"></i> Delete Selected Documents</button>
+        </div>
+      </div>
+
+      <!-- Additional Documents Section -->
+      <div class="form-section draggable" data-section-id="additional-documents">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Additional Documents</h3>
+        </div>
+        <table class="additional-documents">
+          <thead>
+            <tr>
+              <th style="width: 40px;">Select</th>
+              <th>Document</th>
+              <th>Title</th>
+              <th>Approval Status</th>
+               <th class="action-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" name="add-doc-1"></td>
+              <td><input type="text" name="add-doc-num-1"></td>
+              <td>General Assembled Drawings</td>
+              <td><input type="text" name="add-doc-status-1"></td>
+               <td></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="add-doc-2"></td>
+              <td><input type="text" name="add-doc-num-2"></td>
+              <td>Pressure Test Procedure</td>
+              <td><input type="text" name="add-doc-status-2"></td>
+               <td></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="add-doc-3"></td>
+              <td><input type="text" name="add-doc-num-3"></td>
+              <td>Fugitive Emission Test Procedure - SPE 77/312</td>
+              <td><input type="text" name="add-doc-status-3"></td>
+               <td></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="add-doc-4"></td>
+              <td><input type="text" name="add-doc-num-4"></td>
+              <td>Low Temperature Procedure - SPE 77/200</td>
+              <td><input type="text" name="add-doc-status-4"></td>
+               <td></td>
+            </tr>
+             <tr>
+                <td><input type="checkbox" name="add-doc-template"></td>
+                <td><input type="text" name="add-doc-num-template" placeholder="Document Number"></td>
+                <td><input type="text" name="add-doc-title-template" placeholder="Title"></td>
+                <td><input type="text" name="add-doc-status-template" placeholder="Status"></td>
+                <td></td>
+            </tr>
+          </tbody>
+        </table>
+         <div style="text-align:right; margin-top:10px;">
+             <button type="button" class="btn btn-primary add-row-btn" data-table-selector=".additional-documents">
+                <i class="fas fa-plus-circle"></i> Add Additional Document Row
+             </button>
+              <button type="button" class="btn btn-danger delete-selected-docs-btn" data-table-selector=".additional-documents">
+                <i class="fas fa-trash"></i> Delete Selected Documents
+             </button>
+           </div>
+      </div>
+
+      <!-- Additional Sections - Combined into tabs or collapsible panels for space efficiency -->
+      <div class="form-section draggable" data-section-id="accordions">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Additional Information</h3>
+        </div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <h3 class="accordion-header">Logistics & Transportation</h3>
+            <div class="accordion-content">
+              <label for="logistics-information">Logistics Information</label>
+              <textarea class="full-width" name="logistics-information" rows="3"></textarea>
+
+              <label for="link-transportation">Link Transportation</label>
+              <textarea class="full-width" name="link-transportation" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h3 class="accordion-header">Preventative/Remedial & Facility</h3>
+            <div class="accordion-content">
+              <label for="preventative-remedial">Preventative/Remedial activities summary</label>
+              <textarea class="full-width" name="preventative-remedial" rows="3"></textarea>
+
+              <label for="facility">Facility</label>
+              <textarea class="full-width" name="facility" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h3 class="accordion-header">Safety & Calibration</h3>
+            <div class="accordion-content">
+              <label for="safety">Safety</label>
+              <textarea class="full-width" name="safety" rows="3"></textarea>
+
+              <label for="calibration">Calibration</label>
+              <p>Description of all measurement method or transfer standards and found value:</p>
+              <table class="calibration-table">
+                <thead>
+                  <tr>
+                    <th>Parameter</th>
+                    <th>Serial N°</th>
+                    <th>Cal. Value</th>
+                    <th>Accepted Value</th>
+                    <th>Certificate N°</th>
+                    <th>Next Cal. Due</th>
+                    <th class="action-cell">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" name="parameter-1"></td>
+                    <td><input type="text" name="serial-1"></td>
+                    <td><input type="text" name="cal-value-1"></td>
+                    <td><input type="text" name="accepted-value-1"></td>
+                    <td><input type="text" name="certificate-1"></td>
+                    <td><input type="text" name="next-cal-1"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" name="parameter-2"></td>
+                    <td><input type="text" name="serial-2"></td>
+                    <td><input type="text" name="cal-value-2"></td>
+                    <td><input type="text" name="accepted-value-2"></td>
+                    <td><input type="text" name="certificate-2"></td>
+                    <td><input type="text" name="next-cal-2"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" name="parameter-template"></td>
+                    <td><input type="text" name="serial-template"></td>
+                    <td><input type="text" name="cal-value-template"></td>
+                    <td><input type="text" name="accepted-value-template"></td>
+                    <td><input type="text" name="certificate-template"></td>
+                    <td><input type="text" name="next-cal-template"></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h3 class="accordion-header">Certificates & Attachments</h3>
+            <div class="accordion-content">
+              <label>MATERIALS TEST CERTIFICATES AND REPORTS</label>
+              <p>Are all certificates in line report names, codes, etc.</p>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="certs-yes" name="certs-check" value="yes">
+                  <label for="certs-yes">YES</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="certs-no" name="certs-check" value="no">
+                  <label for="certs-no">NO</label>
+                </div>
+              </div>
+              <textarea class="full-width" name="certificates-notes" rows="2" placeholder="If NO, explain:"></textarea>
+
+              <label>ATTACHMENTS</label>
+              <p>If any attachment to this report (cover sheet, specific notes, etc.)</p>
+              <textarea class="full-width" name="attachments" rows="2"></textarea>
+
+              <label>FILE ATTACHMENTS</label>
+              <input type="file" id="file-attachments" name="file-attachments" multiple>
+              <button type="button" id="zipAttachmentsBtn" class="btn btn-secondary">
+                <i class="fas fa-file-archive"></i> Zip All Attachments
+              </button>
+              <div id="file-list" class="file-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature Section -->
+      <div class="form-section signature-section non-draggable" data-section-id="signatures">
+        <div class="section-header">
+          <h3>Signatures</h3>
+        </div>
+        <div class="signature-row">
+          <div class="signature-field">
+            <p>Inspector Signature:</p>
+            <input type="text" id="inspector-signature-name" name="inspector-signature-name" placeholder="Type Inspector name here">
+            <div class="signature-line"></div>
+          </div>
+          <div class="signature-field">
+            <p>Supplier:</p>
+            <input type="text" id="supplier-signature-name" name="supplier-signature-name" placeholder="Type Supplier name here">
+            <div class="signature-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Documentation Section -->
+      <div class="form-section draggable" data-section-id="image-documentation">
+        <div class="section-header">
+          <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+          <h3>Image Documentation</h3>
+        </div>
+        <div class="image-upload-container">
+          <p class="upload-instructions">Upload images for documentation purposes. For each image, you can add detailed comments.</p>
+          <button type="button" class="add-image-btn"><i class="fas fa-plus-circle"></i> Add New Image</button>
+
+          <div class="images-container">
+            <!-- Images will be added here dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- File Input for Loading Reports (hidden) -->
+      <input type="file" id="load-report-file" accept=".json" style="display: none;">
+    </form>
+  </div>
+
+  <!-- Template Modal -->
+  <div id="templateModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Create New Form Template</h2>
+      <div class="form-group">
+        <label for="newTemplateName">Template Name</label>
+        <input type="text" id="newTemplateName" class="full-width">
+      </div>
+      <div class="form-group">
+        <label>Sections</label>
+        <div id="templateSectionList"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" id="cancelTemplateBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="saveTemplateBtn" class="btn btn-primary">Save Template</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('.form-section .section-header').forEach(function(header){
+        header.addEventListener('click', function(){
+          const section = header.parentElement;
+          section.classList.toggle('collapsed');
+        });
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.item-count-input').forEach(input => {
+        const section = input.closest('.item-details-transposed');
+        const table = section?.querySelector('table');
+        if (!table) return;
+        const headers = table.querySelectorAll('thead th');
+        const maxItems = headers.length - 1;
+        input.max = maxItems;
+        input.min = 1;
+        function setColumns(n) {
+          headers.forEach((th,i)=> th.style.display = (i===0||i<=n)?'':'none');
+          table.querySelectorAll('tbody tr').forEach(row=>{
+            row.querySelectorAll('td').forEach((td,i)=> td.style.display = (i<n)?'':'none');
+          });
+        }
+        setColumns(parseInt(input.value) || 1);
+        input.addEventListener('input', () => {
+          let v = parseInt(input.value) || 1;
+          if (v < 1) v = 1;
+          if (v > maxItems) v = maxItems;
+          input.value = v;
+          setColumns(v);
+        });
+      });
+    });
+  </script>
+  <script>
+    (function(){
+      const templateSelect = document.getElementById('formTemplateSelect');
+      if (!templateSelect) return;
+      const modal = document.getElementById('templateModal');
+      const closeBtn = modal.querySelector('.close');
+      const cancelBtn = document.getElementById('cancelTemplateBtn');
+      const saveBtn = document.getElementById('saveTemplateBtn');
+      const nameInput = document.getElementById('newTemplateName');
+      const sectionList = document.getElementById('templateSectionList');
+      let templates = JSON.parse(localStorage.getItem('formTemplates') || '{}');
+      
+      // ...existing template setup and handlers...
+
+      const deleteTemplateBtn = document.getElementById('deleteTemplateBtn');
+      if (deleteTemplateBtn) {
+        // ...existing delete-template logic...
+      }
+
+      // Export current form template to file
+      const exportTemplateBtn = document.getElementById('exportTemplateBtn');
+      if (exportTemplateBtn) {
+        exportTemplateBtn.addEventListener('click', function() {
+          const tmpl = templateSelect.value;
+          if (!tmpl || tmpl === 'new') {
+            alert('Select a template to export.');
+            return;
+          }
+          const stored = localStorage.getItem('formTemplates') || '{}';
+          const allTpl = JSON.parse(stored);
+          const data = allTpl[tmpl];
+          if (!data) {
+            alert('Template not found.');
+            return;
+          }
+          const blob = new Blob([JSON.stringify({ name: tmpl, sections: data }, null, 2)], { type: 'application/json' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = tmpl + '.template.json';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+
+      const importTemplateBtn = document.getElementById('importTemplateBtn');
+      const importTemplateFile = document.getElementById('importTemplateFile');
+      if (importTemplateBtn && importTemplateFile) {
+        importTemplateBtn.addEventListener('click', () => importTemplateFile.click());
+        importTemplateFile.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            try {
+              const tpl = JSON.parse(evt.target.result);
+              const name = tpl.name;
+              const sections = tpl.sections;
+              if (typeof name !== 'string' || !Array.isArray(sections)) {
+                throw new Error('Invalid template format');
+              }
+              // save and update dropdown
+              templates[name] = sections;
+              localStorage.setItem('formTemplates', JSON.stringify(templates));
+              const opt = document.createElement('option');
+              opt.value = name;
+              opt.textContent = name;
+              templateSelect.appendChild(opt);
+              templateSelect.value = name;
+              templateSelect.dispatchEvent(new Event('change'));
+              alert(`Template "${name}" imported successfully.`);
+            } catch (err) {
+              alert('Failed to import template: ' + err.message);
+            }
+          };
+          reader.readAsText(file);
+          importTemplateFile.value = '';
+        });
+      }
+
+      window.addEventListener('click', e => {
+        if (e.target === modal) closeModal();
+      });
+    })();
+  </script>
+
+  <!-- Google Translate Script -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

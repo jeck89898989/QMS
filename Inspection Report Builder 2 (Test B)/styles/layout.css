@@ -1,0 +1,53 @@
+/* Multi-column layouts for form groups */
+.form-section-two-column,
+.form-section-three-column,
+.form-section-four-column {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 2px;
+}
+
+/* Column configurations for different layouts */
+.form-section-two-column { grid-template-columns: repeat(2, 1fr); }
+.form-section-three-column { grid-template-columns: repeat(3, 1fr); }
+.form-section-four-column { grid-template-columns: repeat(4, 1fr); }
+
+/* Form group layout adjustments */
+.form-section-two-column .form-group,
+.form-section-three-column .form-group,
+.form-section-four-column .form-group {
+    margin-bottom: 0;
+}
+
+/* Input sizing in multi-column layouts */
+.form-section-two-column .form-group input[type="text"],
+.form-section-two-column .form-group input[type="date"],
+.form-section-two-column .form-group input[type="number"],
+.form-section-two-column .form-group textarea,
+.form-section-three-column .form-group input[type="text"],
+.form-section-three-column .form-group input[type="date"],
+.form-section-three-column .form-group input[type="number"],
+.form-section-three-column .form-group textarea,
+.form-section-four-column .form-group input[type="text"],
+.form-section-four-column .form-group input[type="date"],
+.form-section-four-column .form-group input[type="number"],
+.form-section-four-column .form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Form group flex layout */
+.form-group > div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+    align-items: center;
+}
+
+.form-group > div > * {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}

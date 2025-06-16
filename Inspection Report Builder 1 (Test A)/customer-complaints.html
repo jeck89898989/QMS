@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRC Global Customer Complaints</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f7fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #003366;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .home-link, .user-guide-link {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .home-link i, .user-guide-link i {
+      margin-right: 5px;
+    }
+
+    .home-link:hover, .user-guide-link:hover {
+      color: #004c99;
+      text-decoration: underline;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .csv-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-input-container input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #003366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background-color: #004c99;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable th, 
+    table.dataTable td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+    }
+
+    table.dataTable thead th {
+      background-color: #f2f2f2;
+      border-bottom: 2px solid #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dataTables_wrapper .dataTables_length, 
+    .dataTables_wrapper .dataTables_filter, 
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_paginate {
+      margin-bottom: 10px;
+    }
+
+    .status-open {
+      background-color: #ffeeba;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    .status-in-progress {
+      background-color: #b8daff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #004085;
+    }
+
+    .status-resolved {
+      background-color: #c3e6cb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .priority-high {
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .priority-medium {
+      color: #856404;
+    }
+
+    .priority-low {
+      color: #155724;
+    }
+
+    .export-options {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sample-data {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .sample-data h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .sample-data pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    .help-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Google Translate */
+    #google_translate_element {
+      margin-left: 15px;
+    }
+    
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    } 
+    
+    body {
+        top: 0px !important; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="mrc_logo.png" alt="MRC Global Logo" class="logo">
+      <div class="header-text">
+        <h1>Customer Complaints</h1>
+        <p class="subtitle">Management and Resolution System</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="home-link"><i class="fas fa-home"></i> Home</a>
+        <a href="user_guide.html" class="user-guide-link"><i class="fas fa-question-circle"></i> Help</a>
+        <div id="google_translate_element"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <h2>Customer Complaints Tracking</h2>
+      <p>Upload, manage, and analyze customer complaints data. The system allows tracking issues from initial reporting through resolution.</p>
+      
+      <div id="alertBox" class="alert" style="display: none;"></div>
+      
+      <div class="csv-controls">
+        <div class="control-group">
+          <label for="csvFile">Import Customer Complaints Data (CSV)</label>
+          <div class="file-input-container">
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="importBtn" class="btn btn-primary"><i class="fas fa-file-import"></i> Import Data</button>
+            <button id="clearBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Data</button>
+          </div>
+          <p class="help-text">Select a CSV file containing customer complaint records to import</p>
+        </div>
+        
+        <button id="addNewBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Complaint</button>
+      </div>
+      
+      <div class="sample-data">
+        <h3>Sample CSV Format</h3>
+        <p>Your CSV file should follow this structure (header row required):</p>
+        <pre>id,date_received,customer_name,customer_contact,product_reference,complaint_description,priority,status,assigned_to,response_actions,resolution_date,customer_feedback
+1,2023-11-05,Acme Industries,john.smith@acme.com,PR-4532,"Received wrong valve size, ordered 2" but received 3"",High,Resolved,Maria Garcia,"Apologized, expedited correct size delivery, provided return label",2023-11-10,Satisfied with quick resolution
+2,2023-11-12,Global Energy Corp,sarah.jones@globalenergy.com,PR-7890,Valve actuator not functioning as specified,Medium,In Progress,Eric Chen,"Troubleshooting guide sent, technician scheduled visit",,
+3,2023-11-15,Northeast Petroleum,tech@nepetro.com,PR-1234,Documentation package missing required certification,Low,Open,Pending assignment,,</pre>
+      </div>
+      
+      <div class="table-container">
+        <table id="complaintsTable" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date Received</th>
+              <th>Customer</th>
+              <th>Product Reference</th>
+              <th>Complaint Description</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Assigned To</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="export-options">
+        <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export to CSV</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      </div>
+    </div>
+    
+    <!-- Modal for viewing/editing complaint details -->
+    <div id="complaintModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Customer Complaint Record</h2>
+        <form id="complaintForm">
+          <input type="hidden" id="complaintId">
+          
+          <div class="form-group">
+            <label for="dateReceived">Date Received</label>
+            <input type="date" id="dateReceived" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="customerContact">Customer Contact (Email/Phone)</label>
+            <input type="text" id="customerContact" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="productReference">Product Reference</label>
+            <input type="text" id="productReference" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="complaintDescription">Complaint Description</label>
+            <textarea id="complaintDescription" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" required>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignedTo">Assigned To</label>
+            <input type="text" id="assignedTo">
+          </div>
+          
+          <div class="form-group">
+            <label for="responseActions">Response Actions</label>
+            <textarea id="responseActions" rows="3"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="resolutionDate">Resolution Date</label>
+            <input type="date" id="resolutionDate">
+          </div>
+          
+          <div class="form-group">
+            <label for="customerFeedback">Customer Feedback</label>
+            <textarea id="customerFeedback" rows="2"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Complaint</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> MRC Global. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      let table = $('#complaintsTable').DataTable({
+        columns: [
+          { data: 'id' },
+          { data: 'date_received' },
+          { data: 'customer_name' },
+          { data: 'product_reference' },
+          { data: 'complaint_description' },
+          { 
+            data: 'priority',
+            render: function(data) {
+              let className = '';
+              if (data === 'High') className = 'priority-high';
+              else if (data === 'Medium') className = 'priority-medium';
+              else if (data === 'Low') className = 'priority-low';
+              return `<span class="${className}">${data}</span>`;
+            }
+          },
+          { 
+            data: 'status',
+            render: function(data) {
+              return `<span class="status-${data.toLowerCase().replace(' ', '-')}">${data}</span>`;
+            }
+          },
+          { data: 'assigned_to' },
+          { 
+            data: null,
+            defaultContent: '<button class="btn-view"><i class="fas fa-eye"></i></button> <button class="btn-edit"><i class="fas fa-edit"></i></button> <button class="btn-delete"><i class="fas fa-trash"></i></button>',
+            orderable: false 
+          }
+        ]
+      });
+      
+      // Check for local storage data on load
+      loadFromLocalStorage();
+      
+      // Import CSV button click handler
+      $('#importBtn').click(function() {
+        const fileInput = $('#csvFile')[0];
+        if (fileInput.files.length === 0) {
+          showAlert('Please select a CSV file first.', 'danger');
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const csv = e.target.result;
+          processCSV(csv);
+        };
+        
+        reader.readAsText(file);
+      });
+      
+      // Process CSV data
+      function processCSV(csv) {
+        const lines = csv.split('\n');
+        if (lines.length < 2) {
+          showAlert('The CSV file appears to be empty or invalid.', 'danger');
+          return;
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const expectedHeaders = ['id', 'date_received', 'customer_name', 'customer_contact', 'product_reference', 'complaint_description', 'priority', 'status', 'assigned_to', 'response_actions', 'resolution_date', 'customer_feedback'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          showAlert(`CSV is missing required columns: ${missingHeaders.join(', ')}`, 'danger');
+          return;
+        }
+        
+        // Clear existing data
+        table.clear();
+        
+        // Process data rows
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim() === '') continue;
+          
+          // Handle quoted fields properly
+          let row = {};
+          const lineMatch = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+          if (lineMatch) {
+            headers.forEach((header, index) => {
+              if (index < lineMatch.length) {
+                let value = lineMatch[index].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+                row[header] = value;
+              } else {
+                row[header] = '';
+              }
+            });
+            data.push(row);
+          }
+        }
+        
+        if (data.length === 0) {
+          showAlert('No valid data rows found in the CSV file.', 'danger');
+          return;
+        }
+        
+        // Add rows to table
+        table.rows.add(data).draw();
+        
+        // Save to local storage
+        saveToLocalStorage(data);
+        
+        showAlert(`Successfully imported ${data.length} customer complaint records.`, 'success');
+        $('#csvFile').val('');
+      }
+      
+      // Clear data button click handler
+      $('#clearBtn').click(function() {
+        if (confirm('Are you sure you want to clear all customer complaint records? This cannot be undone.')) {
+          table.clear().draw();
+          localStorage.removeItem('customerComplaintsData');
+          showAlert('All customer complaint records have been cleared.', 'success');
+        }
+      });
+      
+      // Add new complaint button click handler
+      $('#addNewBtn').click(function() {
+        $('#modalTitle').text('Add New Customer Complaint');
+        $('#complaintForm')[0].reset();
+        $('#complaintId').val('');
+        $('#dateReceived').val(new Date().toISOString().substr(0, 10)); // Set today's date
+        $('#complaintModal').css('display', 'block');
+      });
+      
+      // View complaint button click handler
+      $('#complaintsTable').on('click', '.btn-view', function() {
+        const data = table.row($(this).parents('tr')).data();
+        viewComplaint(data);
+      });
+      
+      // Edit complaint button click handler
+      $('#complaintsTable').on('click', '.btn-edit', function() {
+        const data = table.row($(this).parents('tr')).data();
+        editComplaint(data);
+      });
+      
+      // Delete complaint button click handler
+      $('#complaintsTable').on('click', '.btn-delete', function() {
+        if (confirm('Are you sure you want to delete this complaint? This cannot be undone.')) {
+          const row = $(this).parents('tr');
+          const data = table.row(row).data();
+          
+          // Remove from table
+          table.row(row).remove().draw();
+          
+          // Update local storage
+          saveToLocalStorage(table.data().toArray());
+          
+          showAlert('Complaint has been deleted.', 'success');
+        }
+      });
+      
+      // Modal close button
+      $('.close, #cancelBtn').click(function() {
+        $('#complaintModal').css('display', 'none');
+      });
+      
+      // Close modal if clicking outside of it
+      $(window).click(function(event) {
+        if ($(event.target).is('#complaintModal')) {
+          $('#complaintModal').css('display', 'none');
+        }
+      });
+      
+      // Form submit handler
+      $('#complaintForm').submit(function(e) {
+        e.preventDefault();
+        saveComplaint();
+      });
+      
+      // Export to CSV button
+      $('#exportCsvBtn').click(function() {
+        exportToCSV();
+      });
+      
+      // Export to PDF button
+      $('#exportPdfBtn').click(function() {
+        exportToPDF();
+      });
+      
+      // Functions
+      function viewComplaint(data) {
+        $('#modalTitle').text('View Customer Complaint');
+        populateForm(data);
+        
+        // Disable all form fields for view mode
+        $('#complaintForm input, #complaintForm select, #complaintForm textarea').attr('disabled', true);
+        $('#saveBtn').hide();
+        
+        $('#complaintModal').css('display', 'block');
+      }
+      
+      function editComplaint(data) {
+        $('#modalTitle').text('Edit Customer Complaint');
+        populateForm(data);
+        
+        // Enable all form fields for edit mode
+        $('#complaintForm input, #complaintForm select, #complaintForm textarea').attr('disabled', false);
+        $('#saveBtn').show();
+        
+        $('#complaintModal').css('display', 'block');
+      }
+      
+      function populateForm(data) {
+        $('#complaintId').val(data.id);
+        $('#dateReceived').val(data.date_received);
+        $('#customerName').val(data.customer_name);
+        $('#customerContact').val(data.customer_contact);
+        $('#productReference').val(data.product_reference);
+        $('#complaintDescription').val(data.complaint_description);
+        $('#priority').val(data.priority);
+        $('#status').val(data.status);
+        $('#assignedTo').val(data.assigned_to);
+        $('#responseActions').val(data.response_actions);
+        $('#resolutionDate').val(data.resolution_date);
+        $('#customerFeedback').val(data.customer_feedback);
+      }
+      
+      function saveComplaint() {
+        const formData = {
+          id: $('#complaintId').val() || generateId(),
+          date_received: $('#dateReceived').val(),
+          customer_name: $('#customerName').val(),
+          customer_contact: $('#customerContact').val(),
+          product_reference: $('#productReference').val(),
+          complaint_description: $('#complaintDescription').val(),
+          priority: $('#priority').val(),
+          status: $('#status').val(),
+          assigned_to: $('#assignedTo').val(),
+          response_actions: $('#responseActions').val(),
+          resolution_date: $('#resolutionDate').val(),
+          customer_feedback: $('#customerFeedback').val()
+        };
+        
+        // Check if this is an update or new complaint
+        const existingData = table.data().toArray();
+        const existingIndex = existingData.findIndex(r => r.id === formData.id);
+        
+        if (existingIndex >= 0) {
+          // Update existing complaint
+          table.row(existingIndex).data(formData).draw();
+          showAlert('Complaint updated successfully.', 'success');
+        } else {
+          // Add new complaint
+          table.row.add(formData).draw();
+          showAlert('New complaint added successfully.', 'success');
+        }
+        
+        // Save to local storage
+        saveToLocalStorage(table.data().toArray());
+        
+        // Close modal
+        $('#complaintModal').css('display', 'none');
+      }
+      
+      function generateId() {
+        const data = table.data().toArray();
+        if (data.length === 0) return '1';
+        
+        // Find the maximum ID and increment by 1
+        const maxId = Math.max(...data.map(r => parseInt(r.id) || 0));
+        return (maxId + 1).toString();
+      }
+      
+      function saveToLocalStorage(data) {
+        localStorage.setItem('customerComplaintsData', JSON.stringify(data));
+      }
+      
+      function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('customerComplaintsData');
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Array.isArray(data) && data.length > 0) {
+              table.clear();
+              table.rows.add(data).draw();
+              showAlert(`Loaded ${data.length} saved customer complaint records.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error loading saved data:', e);
+          }
+        }
+      }
+      
+      function showAlert(message, type) {
+        const alertBox = $('#alertBox');
+        alertBox.text(message);
+        alertBox.removeClass('alert-success alert-danger');
+        alertBox.addClass(`alert-${type}`);
+        alertBox.show();
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          alertBox.fadeOut();
+        }, 5000);
+      }
+      
+      function exportToCSV() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // Get all headers
+        const headers = ['id', 'date_received', 'customer_name', 'customer_contact', 'product_reference', 'complaint_description', 'priority', 'status', 'assigned_to', 'response_actions', 'resolution_date', 'customer_feedback'];
+        
+        // Create CSV content
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        
+        // Add headers
+        csvContent += headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+          const values = headers.map(header => {
+            let value = row[header] || '';
+            // Escape quotes and wrap in quotes if the value contains commas or quotes
+            if (value.includes('"') || value.includes(',')) {
+              value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+          });
+          csvContent += values.join(',') + '\n';
+        });
+        
+        // Create download link
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `customer_complaints_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        
+        // Trigger download
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+      }
+      
+      function exportToPDF() {
+        const data = table.data().toArray();
+        if (data.length === 0) {
+          showAlert('No data to export.', 'danger');
+          return;
+        }
+        
+        // PDF initialization
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('MRC Global Customer Complaints Report', 14, 20);
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+        
+        // Prepare table data
+        const tableColumn = ['ID', 'Date', 'Customer', 'Reference', 'Complaint', 'Priority', 'Status', 'Assigned To'];
+        const tableRows = [];
+        
+        data.forEach(item => {
+          const rowData = [
+            item.id,
+            item.date_received,
+            item.customer_name,
+            item.product_reference,
+            item.complaint_description.length > 30 ? item.complaint_description.substring(0, 27) + '...' : item.complaint_description,
+            item.priority,
+            item.status,
+            item.assigned_to
+          ];
+          tableRows.push(rowData);
+        });
+        
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 35,
+          styles: { overflow: 'linebreak' },
+          columnStyles: { 4: { cellWidth: 30 } }, // Make complaint description column wider
+          headStyles: { fillColor: [0, 51, 102] } // MRC blue color
+        });
+        
+        // Save the PDF
+        doc.save(`customer_complaints_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      }
+    });
+    
+    // Google Translate Integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

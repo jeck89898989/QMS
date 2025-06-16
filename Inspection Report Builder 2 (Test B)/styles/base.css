@@ -1,0 +1,424 @@
+/* General body and form styling */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #7f8c8d;
+    --light-accent: #95a6a6;
+    --form-bg: #f5f5f5;
+    --fieldset-bg: #fafafa;
+    --legend-bg: #f0f0f0;
+    --legend-text: #333;
+    --table-header-bg: #f0f0f0;
+    --table-even-row: #f9f9f9;
+    --table-hover: #f0f0f0;
+    --border-color: #ddd;
+    --text-color: #333;
+    --input-bg: white;
+    --input-border: #ccc;
+    --input-focus: #333;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 4px 8px -3px rgba(0, 0, 0, 0.05);
+    --layout-body-margin: 1vw;
+    --layout-form-max-width: 100%;
+    --layout-form-padding: 5px;
+    --layout-fieldset-padding: 3px;
+    --layout-fieldset-margin: 3px;
+    --layout-legend-font-size: 1.1em;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    line-height: 1.6;
+    margin: var(--layout-body-margin);
+    background: linear-gradient(135deg, #f5f5f5 0%, #f0f0f0 100%);
+    color: var(--text-color);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+form {
+    max-width: var(--layout-form-max-width);
+    margin: auto;
+    padding: var(--layout-form-padding);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    border-radius: 6px;
+    position: relative;
+}
+
+form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 50%, #2c5282 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: var(--layout-fieldset-padding);
+    margin-bottom: var(--layout-fieldset-margin);
+    background: var(--fieldset-bg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+    transition: none;
+}
+
+fieldset:hover {
+    border-color: var(--border-color);
+    box-shadow: none;
+}
+
+legend {
+    font-size: var(--layout-legend-font-size);
+    font-weight: 600;
+    padding: 6px 12px;
+    color: var(--legend-text);
+    background: var(--legend-bg);
+    border: none;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-radius: 3px;
+    box-shadow: none;
+    position: relative;
+}
+
+legend::after {
+    display: none;
+}
+
+/* Black and white theme override for legends */
+:root:has(#form-style-select[value="black-white"]) legend,
+legend.black-white-theme {
+    background: transparent !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+/* No color theme override for legends */
+:root:has(#form-style-select[value="no-color"]) legend,
+legend.no-color-theme {
+    background: transparent !important;
+    color: #404040 !important;
+    border: 1px solid #d0d0d0 !important;
+}
+
+/* No color theme override for title block */
+body:has(#form-style-select[value="no-color"]) .title-block,
+.title-block.no-color-theme {
+    background: #ffffff !important;
+    color: #404040 !important;
+    border: 1px solid #d0d0d0 !important;
+}
+
+/* No color theme override for form gradients */
+body:has(#form-style-select[value="no-color"]) form::before {
+    background: linear-gradient(90deg, #808080 0%, #707070 50%, #606060 100%) !important;
+}
+
+/* Visual hint for editable text */
+p:hover:not(.editing):not(.no-edit),
+span:hover:not(.editing):not(.no-edit),
+label:hover:not(.editing):not(.no-edit),
+td:hover:not(.editing):not(.no-edit),
+th:hover:not(.editing):not(.no-edit),
+li:hover:not(.editing):not(.no-edit) {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+    cursor: text !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Enhanced transitions for professional feel */
+* {
+    transition: none;
+}
+
+/* Layout-specific styles with enhanced spacing */
+.layout-compact {
+    font-size: 0.9em;
+}
+
+.layout-compact fieldset {
+    border-width: 1px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.layout-compact .form-section-three-column {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.layout-compact .form-section-two-column {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.layout-wide-screen .form-section-two-column {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.layout-wide-screen .form-section-three-column {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.layout-wide-screen .form-section-four-column {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.layout-narrow fieldset {
+    border-width: 1px;
+    padding: 32px;
+}
+
+.layout-narrow .form-section-three-column,
+.layout-narrow .form-section-four-column {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.layout-minimal fieldset {
+    border: none;
+    box-shadow: var(--shadow-sm);
+    background: #f8f9fa;
+}
+
+.layout-minimal legend {
+    background: transparent;
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 700;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.layout-minimal legend::after {
+    display: none;
+}
+
+.layout-tabular {
+    font-size: 0.85em;
+    line-height: 1.2;
+}
+
+.layout-tabular fieldset {
+    border: 1px solid #333;
+    border-radius: 0;
+    background: white;
+    box-shadow: none;
+    margin-bottom: 8px;
+    page-break-inside: avoid;
+}
+
+.layout-tabular legend {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 0;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    margin-bottom: 5px;
+}
+
+.layout-tabular .form-group {
+    margin-bottom: 3px;
+    padding: 2px;
+    border: none;
+    background: transparent;
+}
+
+.layout-tabular .form-group label {
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #333;
+}
+
+.layout-tabular input[type="text"],
+.layout-tabular input[type="date"],
+.layout-tabular input[type="number"],
+.layout-tabular textarea,
+.layout-tabular select {
+    padding: 2px 4px;
+    font-size: 0.8em;
+    border: 1px solid #666;
+    background: white;
+    border-radius: 0;
+}
+
+.layout-tabular .form-section-two-column,
+.layout-tabular .form-section-three-column,
+.layout-tabular .form-section-four-column {
+    display: block;
+}
+
+.layout-tabular .form-section-two-column .form-group,
+.layout-tabular .form-section-three-column .form-group,
+.layout-tabular .form-section-four-column .form-group {
+    display: inline-block;
+    width: 48%;
+    margin-right: 2%;
+    vertical-align: top;
+    margin-bottom: 5px;
+}
+
+.layout-tabular .form-section-three-column .form-group {
+    width: 31%;
+    margin-right: 1.5%;
+}
+
+.layout-tabular .form-section-four-column .form-group {
+    width: 23%;
+    margin-right: 1%;
+}
+
+.layout-tabular table {
+    border: 1px solid #333;
+    font-size: 0.75em;
+}
+
+.layout-tabular table th {
+    background: #f0f0f0;
+    border: 1px solid #333;
+    padding: 2px 4px;
+    font-size: 0.7em;
+    font-weight: 600;
+}
+
+.layout-tabular table td {
+    border: 1px solid #333;
+    padding: 1px 2px;
+}
+
+.layout-tabular table input {
+    border: none;
+    padding: 1px 2px;
+    font-size: 0.75em;
+    background: transparent;
+}
+
+.layout-tabular .section-header td {
+    background: #e8e8e8 !important;
+    border: 1px solid #333;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+/* Enhanced print styles for tabular layout */
+@media print {
+    body {
+        margin: 1cm;
+    }
+
+    .layout-tabular {
+        font-size: 8pt;
+    }
+    
+    .layout-tabular fieldset {
+        border: 1px solid #000;
+        margin-bottom: 5pt;
+        padding: 3pt;
+    }
+    
+    .layout-tabular legend {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        border: 1px solid #000;
+        font-size: 8pt;
+        padding: 2pt 4pt;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .layout-tabular table {
+        border: 1px solid #000;
+        font-size: 7pt;
+    }
+    
+    .layout-tabular table th {
+        background: #f0f0f0 !important;
+        border: 1px solid #000;
+        padding: 1pt 2pt;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .layout-tabular table td {
+        border: 1px solid #000;
+        padding: 1pt;
+    }
+    
+    .layout-tabular .section-header td {
+        background: #e8e8e8 !important;
+        border: 1px solid #000;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Hide non-printable elements */
+    .no-print, #hamburger-menu, .sidebar, .overlay, .save-indicator, .context-menu {
+        display: none !important;
+    }
+
+    fieldset {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        border-color: #999;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    legend,
+    form > fieldset:first-of-type legend,
+    form > fieldset:nth-of-type(2) legend,
+    form > fieldset:nth-of-type(3) legend,
+    form > fieldset:nth-of-type(4) legend {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    legend::after {
+        display: none;
+    }
+    
+    textarea {
+        resize: none;
+    }
+
+    /* Improve table printing */
+    table {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-after: auto;
+        break-after: auto;
+    }
+    thead {
+        display: table-header-group;
+    }
+    tfoot {
+        display: table-footer-group;
+    }
+
+    /* Ensure backgrounds print for key elements */
+    legend, table th, .section-header td, tr:nth-child(even) td, tfoot td, .partial-total, #weekly-total-time, #weekly-total-km {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
